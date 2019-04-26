@@ -1,0 +1,255 @@
+﻿@using PagedList.Mvc
+@model InventarioOtro.ViewModels.IndexMovimientoViewModel
+@{
+    ViewBag.Title = "Movimientos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<h4>Listado de Movimientos</h4>
+
+<div class="row" style="float: right">
+    <p>
+        <a role="button">@Html.ActionLink("+", "Create", new { area = "" }, new { @class = "btn btn-primary btn-lg", @title = "Insertar un nuevo cliente" })</a>
+    </p>
+</div>
+
+
+@using (Html.BeginForm())
+{
+    <div class="row form-group">
+        <div class="col-md-1" style="margin-top: 8px; margin-left: 7px">Mostrar</div>
+        <div class="col-md-1" style="margin-left: -13px; ">@Html.TextBox("Paso", "50", new { @class = "form-control", @type = "number", @min = 1, @style = "width:120%" })</div>
+        <div class="col-md-1 ">@Html.Label("", new { @class = "hidden" })</div>
+        <div class="col-md-2">
+            @{
+                var listcriterio = new List<SelectListItem>();
+
+
+                listcriterio.Add(new SelectListItem()
+                {
+                    Value = "2",
+                    Text = "Descripción"
+                });
+                listcriterio.Add(new SelectListItem()
+                {
+                    Value = "3",
+                    Text = "Tipo Movimiento"
+                });
+                listcriterio.Add(new SelectListItem()
+                {
+                    Value = "1",
+                    Text = "Nombre del movimiento"
+                });
+            }
+            @Html.DropDownList("categoriaId", listcriterio, new { @class = "form-control" })
+
+        </div>
+
+        @{
+            var listcriterio1 = new List<SelectListItem>();
+
+            listcriterio1.Add(new SelectListItem()
+            {
+                Value = "1",
+                Text = "Ingreso"
+            });
+            listcriterio1.Add(new SelectListItem()
+            {
+                Value = "2",
+                Text = "Gasto"
+            });
+            listcriterio1.Add(new SelectListItem()
+            {
+                Value = "3",
+                Text = "Extracción"
+            });
+            listcriterio1.Add(new SelectListItem()
+            {
+                Value = "4",
+                Text = "Interno"
+            });
+            listcriterio1.Add(new SelectListItem()
+            {
+                Value = "5",
+                Text = "Comisión"
+            });
+            listcriterio1.Add(new SelectListItem()
+            {
+                Value = "6",
+                Text = "Gastos por Merma"
+            });
+            listcriterio1.Add(new SelectListItem()
+            {
+                Value = "7",
+                Text = "Ganancia"
+            });
+
+        }
+
+        <div class="col-md-2">@Html.TextBox("SearchString", "", new { @class = "form-control" })@Html.DropDownList("SearchString1", new SelectList(listcriterio1, "Value", "Text"), "Seleccione", new { @class = "form-control" })</div>
+        <div class="col-md-2">
+            <button id="buscarMov" type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Buscar según el criterio" data-original-title="Buscar">Buscar</button>
+        </div>
+    </div>
+}
+
+
+<table class="table table-hover table-responsive-md" style="margin-left: 5px">
+    <tr class="table-primary ">
+        <th>
+            @Html.ActionLink("Nombre del Movimiento", "Index", new { sortOrder = ViewBag.NameSortParm })
+        </th>
+        <th>
+            Descripción
+        </th>
+        <th>
+            @Html.ActionLink("Monto", "Index", new { sortOrder = ViewBag.MontoSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Tipo de Movimiento", "Index", new { sortOrder = ViewBag.TipSortParm }) 
+        </th>
+        <th>
+            @Html.ActionLink("Usuario", "Index", new { sortOrder = ViewBag.UserSortParm }) 
+        </th>
+        <th style="width:15%">
+            @Html.ActionLink("Fecha", "Index", new { sortOrder = ViewBag.DateSortParm })
+
+        </th>
+
+        <th style="width:15%"></th>
+    </tr>
+    @if (!Model.ListMovimiento.Any())
+    {
+        <tr><td colspan="6">No hay elementos que mostrar</td></tr>
+    }
+    @foreach (var item in Model.ListMovimiento)
+    {
+        <tr id="s">
+
+            <td style="max-width: 200px; width: 25%">
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td style="max-width: 200px; width: 30%">
+                @Html.DisplayFor(modelItem => item.Descripcion)
+            </td>
+            <td>
+                $@Html.DisplayFor(modelItem => item.Monto)
+            </td>
+            <td>
+                @{
+                    if (item.TipoMovimiento == 1)
+                    {
+                        <p>Ingreso</p>
+                    }
+                    else if (item.TipoMovimiento == 2)
+                    {
+                        <p>Gasto</p>
+                    }
+                    else if (item.TipoMovimiento == 3)
+                    {
+                        <p>Extracción</p>
+                    }
+                    else if (item.TipoMovimiento == 4)
+                    {
+                        <p>Interno</p>
+                    }
+                    else if (item.TipoMovimiento == 5)
+                    {
+                        <p>Comisión</p>
+                    }
+                    else if (item.TipoMovimiento == 7)
+                    {
+                        <p>Ganancia</p>
+                    }
+                    else
+
+                    {
+                        <p>Merma</p>
+                    }
+                }
+
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Usuario)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaMovimiento)
+            </td>
+
+            <td>
+                @if (item.IdProducto != 0)
+                {
+                    @Html.ActionLink("E", "Edit", new { id = item.ID }, new { @class = "btn_edit btn_md", @title = "Editar" })
+                    @Html.ActionLink("D", "Details", new { id = item.ID }, new { @class = "btn_detail btn_md", @title = "Detalles" })
+                    @Html.ActionLink("B", "Delete", new { id = item.ID }, new { @class = "btn_delete btn_md", @title = "Borrar" })
+                }
+                @if (item.IdProCompra != 0)
+                {
+                   
+                    @Html.ActionLink("D", "Details","Productoes", new { id = item.IdProCompra, m="m" }, new { @class = "btn_detail btn_md", @title = "Detalles" })
+                   
+                }
+                @if (item.IdVenta != 0)
+                {
+                    
+                    @Html.ActionLink("D", "Details","Ventas", new { id = item.IdVenta, l = "l" }, new { @class = "btn_detail btn_md", @title = "Detalles" })
+                    
+                }
+
+            </td>
+        </tr>
+    }
+
+</table>
+
+Página @(Model.ListMovimiento.PageCount < Model.ListMovimiento.PageNumber ? 0 : Model.ListMovimiento.PageNumber) de @Model.ListMovimiento.PageCount
+
+@Html.PagedListPager(Model.ListMovimiento, page => Url.Action("Index",
+    new { page, SearchString = ViewBag.Search, Paso= ViewBag.Paso, categoriaId=ViewBag.categoriaId }))
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+
+            $("#Paso").on("blur",
+                function () {
+                    if ($("#Paso").val() === "" || parseInt($("#Paso").val()) === 0) {
+                        $("#Paso").val("1");
+                    }
+                    $("#buscarMov").click();
+                });
+
+            $("#categoriaId").on("change",
+                function () {
+                    if ($("#categoriaId").val() === "3") {
+                        $("#SearchString").attr("disabled", true);
+                        $("#SearchString1").attr("disabled", false);
+                        $("#SearchString").attr("style", "display: none");
+                        $("#SearchString1").attr("style", "display: block");
+
+
+
+                    } else {
+                        $("#SearchString1").attr("disabled", true);
+                        $("#SearchString").attr("disabled", false);
+                        $("#SearchString1").attr("style", "display:none");
+                        $("#SearchString").attr("style", "display:block");
+                    }
+
+                });
+
+            if ($("#categoriaId").val() !== "3") {
+                $("#SearchString1").attr("disabled", true);
+                $("#SearchString1").attr("style", "display:none");
+            } else {
+                $("#SearchString").attr("disabled", true);
+                $("#SearchString").attr("style", "display:none");
+            }
+
+
+        });
+    </script>
+
+
+}

@@ -1,0 +1,88 @@
+﻿@model InventarioOtro.Models.Merma
+
+@{
+    ViewBag.Title = "Detalles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br/>
+<h4>Detalles</h4>
+
+<div>
+    <h4>Merma</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <div class="row">
+            <div class="col-md-4">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Producto.Carticulo)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Producto.Carticulo)
+                </dd>
+            </div>
+            <div class="col-md-4">
+                <dt>
+                    Categoría
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Producto.CategoriaProducto.Cnombre)
+                </dd>
+            </div>
+            <div class="col-md-4">
+                <dt>
+                    Lote
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Producto.Clote)
+                </dd>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Cantidad)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Cantidad)
+                </dd>
+
+            </div>
+            <div class="col-md-4">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Precio)
+                </dt>
+
+                <dd>
+                    $@Html.DisplayFor(model => model.Precio)
+                </dd>
+            </div>
+            <div class="col-md-4">
+                <dt>
+                    Costo Total
+                </dt>
+                @{var a = Model.Cantidad * Model.Producto.Npreccosto;}
+                <dd>
+                    $@a
+                </dd>
+            </div>
+        </div>
+        
+
+
+
+
+    </dl>
+</div>
+<div class="row" style="margin-top: 25px">
+    <div class="col-md-offset-2 col-md-1">
+        <a role="button">@Html.ActionLink("Editar", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary", @title = "Editar" })</a>
+    </div>
+    <div class="col-md-offset-2 col-md-2">
+        <a role="button">@Html.ActionLink("Regresar", "Index", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+    </div>
+</div>

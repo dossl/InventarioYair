@@ -1,0 +1,44 @@
+﻿@model InventarioOtro.Models.CategoriaProducto
+
+@{
+    ViewBag.Title = "Eliminar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<h4>Eliminar</h4>
+@if (ViewBag.Mensaje)
+{
+    <div class="alert alert-dismissible alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Atención!!!</strong> <a href="#" class="alert-link">Esta categoría contiene productos asociados.</a> No se puede eliminar
+    </div>
+}
+<h3>Está seguro que desea eliminar esto?</h3>
+<div>
+    <h4>Categoría Producto</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Cnombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cnombre)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <div class="col-md-offset-2 col-md-1">
+                <input type="submit" value="Borrar" class="btn btn-primary" />
+            </div>
+            <div class="col-md-offset-2 col-md-2">
+                <a role="button">@Html.ActionLink("Regresar", "Index", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+            </div>
+        </div>
+    }
+</div>

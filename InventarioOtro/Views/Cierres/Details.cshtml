@@ -1,0 +1,59 @@
+﻿@model InventarioOtro.Models.Cierre
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<h4>Details</h4>
+
+<div>
+    <h4>Cierre</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.GananciasPeriodo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GananciasPeriodo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CantidadArticulos)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CantidadArticulos)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ValorTotalVentas)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ValorTotalVentas)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CantArticulosDev)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CantArticulosDev)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fecha)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fecha)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

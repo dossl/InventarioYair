@@ -1,0 +1,346 @@
+﻿@model InventarioOtro.ViewModels.VentaViewModel
+@{
+    ViewBag.Title = "Devolución";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br/>
+<br />
+<h4>Devolución</h4>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    @Html.HiddenFor(model => model.Venta.TipoVenta)
+    @Html.HiddenFor(model => model.Venta.ID)
+    @Html.HiddenFor(model => model.ObjJson)
+
+    <div id="dev">
+        <div class="row">
+            <div class="col-md-4" style="margin-top: 5px">
+                <div class="form-group">
+                    @Html.Label("Fecha","Fecha", htmlAttributes: new { @class = "control-label col-md-10" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.Devolucion.Fecha, "{0:dd/MM/yyyy}", new { @readonly=true, @class = "form-control", @type = "text" })
+                        @Html.ValidationMessageFor(model => model.Venta.FechaVenta, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+     
+            <div class="col-md-4" style="margin-top: 5px">
+                <div class="form-group">
+                    <label class="control-label col-md-2">Notas</label>
+                    <div class="col-md-10">
+
+
+                        @Html.TextAreaFor(model => model.Devolucion.Notas, new {@placeholder = "Motivo de la devolución", @class = "form-control ", @type = "text", @style = "width: 140%"})
+                        @Html.ValidationMessageFor(model => model.Devolucion.Notas,"", new {@class = "text-danger"})
+
+
+                    </div>
+                </div>
+
+            </div>
+         
+
+        </div>
+        
+        <div class="row">
+            <h4>Artículos en venta</h4>
+            <table id="tbl_devo" class="table table-hover table-responsive-md" style="margin-left: -35px;width: 125%;">
+                <thead>
+                <tr class="table-primary ">
+                    <th style="display: none">
+                        Id
+                    </th>
+                    <th>
+                        Artículo
+                    </th>
+                    <th>
+                        Lote
+                    </th>
+                    <!--<th>
+                        Descuento
+                    </th>-->
+
+                    <th>
+                        Cantidad
+                    </th>
+                    <th>
+                        Garantía
+                    </th>
+                    <th>
+                        Precio por producto
+                    </th>
+                    <th>
+                        A devolver
+                    </th>
+                    <th style="display: none">
+                        GananciaTrab
+                    </th>
+                    
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.Venta.DetallesVenta)
+                {
+                    <tr>
+                        <td style="display: none">
+                            @Html.DisplayFor(modelItem => item.ProductoId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Producto.Carticulo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Producto.Clote)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Cantidad)
+                        </td>
+                        <td>
+                            @{
+
+                                if (item.Garantia == 0)
+                                {
+                                    <p>Sin Garantía</p>
+                                }
+                                else
+                                {
+                                    <p>@item.Garantia días</p>
+                                }
+
+                            }
+
+                        </td>
+                        <td>
+                            @{
+                                decimal precio = 0;
+                                if (Model.Venta.TipoVenta == 1)
+                                {
+                                    precio = item.Producto.Nprecminoris * item.Cantidad;
+                                }
+                                else
+                                {
+                                    precio = item.Producto.Nprecmayoris * item.Cantidad;
+                                }
+
+                            }
+                            <p>$@precio</p>
+                        </td>
+                        <td>
+
+                            @Html.TextBox("Cantidad", item.Cantidad, new {@required = true, @placeholder = "", @class = "form-control ", @type = "number", @style = "width: 50%", @min = 0, @max = item.Cantidad})
+                        </td>
+                        <td style="display: none">
+                            @Html.DisplayFor(modelItem => item.Producto.Ngananctrab)
+                        </td>
+
+                    </tr>
+                }
+
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="row" style="margin-top: 20px">
+            <div class="col-md-offset-2 col-md-1">
+                <input id="btnCrear" type="button" value="Aceptar" class="btn btn-primary" />
+            </div>
+            <div class="col-md-offset-2 col-md-2">
+                <a role="button">@Html.ActionLink("Regresar", "Index", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+            </div>
+        </div>
+
+    </div>
+
+
+   
+
+
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        var venta = {
+            "ID": "",
+            "FechaVenta": "",
+            "MensajeroId": "",
+            "VendedorId": "",
+            "ClienteId": "",
+            "GanaMensajero": "",
+            "Descuento": "",
+            "CostoTotal": "",
+            "GanaTotal": "",
+            "PrecioTotal": "",
+            "CantTotalProductos": "",
+            "Estado": "",
+            "Usuario": "",
+            "TipoVenta": "",
+            "DetallesVenta": []
+        };
+
+
+        var vm = venta;
+
+        $(document).ready(function() {
+
+
+            //////////////////////////////////////TUTORIAL////////////////////////////////////////////////
+
+            $("#tbl_devo").dataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "searching": false,
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+                columns: [
+                    {
+                        
+                    }, {}, {}, {}, {}, {},
+                    {
+                        "bSortable": false,
+                        render: function() {
+                            return "<input id='Cantidad' type='number' class='form-control'>";
+                        }
+                    },
+                    {
+                      
+                    }
+                ]
+            });
+
+
+            //////////////////////////////////////////////////////////////////////////////////////////////
+
+
+            //////////////////BUscar mensajeros///////////////////////////////////////////////////////////////////
+
+
+            vm = JSON.parse($("#ObjJson").val());
+
+
+        }); //fin documenready
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        $("#btnCrear").on("click",
+            function() {
+
+                var count = $('#tbl_devo').DataTable().rows().count();
+                var parar = false;
+                var dispo = 0;
+                var cantC = 0;
+                var cantTotal = 0;
+                
+                var ganan = 0;
+                var dev= {
+                    "Id":"",
+                    "Notas": "",
+                    "VentaId": "",
+                    "DescuentoSalario": "",
+                    "Fecha": "",
+                    "Cantidad": "",
+                    "Detalles":[]
+                }
+              
+                for (var i = 0; i < count && !parar; i++) {
+                    var deta= {
+                        "idProd": "",
+                        "cant":""
+                    }
+
+                    dispo = $('#tbl_devo').dataTable().fnGetData(i, 3);
+                    cantC = $('#tbl_devo').dataTable().fnGetNodes(i).children[6].children[0].value;
+                   
+                    if (parseInt(cantC) < 0 ) {
+                        bootbox.alert("La cantidad a devolver debe ser mayor que 0");
+                        parar = true;
+                        break;
+                    } else {
+                        if (parseInt(cantC) > parseInt(dispo)) {
+                            bootbox.alert("La cantidad a devolver debe ser menor o igual que la cantidad comprada");
+                            parar = true;
+                            break;
+                        }
+                    }
+                    cantC === "" ? cantC = 0 : cantC=parseInt(cantC);
+                    cantTotal += cantC;
+                    if ($('#tbl_devo').dataTable().fnGetNodes(i).children[6].children[0].value === "")
+                        ganan += 0;
+                    else {
+                        ganan += cantC * parseFloat($('#tbl_devo').dataTable().fnGetNodes(i).children[6].children[0].value);
+                    }
+                    deta.cant = cantC;
+                    deta.idProd = $('#tbl_devo').dataTable().fnGetData(i, 0).trim();
+                    dev.Detalles.push(deta);
+                    
+                }
+
+                if (cantTotal <= 0 && !parar) {
+                    bootbox.alert("Debe seleccionar los productos a devolver");
+                    parar = true;
+                }
+               
+                dev.VentaId = vm.ID;
+                dev.Fecha = $("#Devolucion_Fecha").val();
+                dev.Notas = $("#Devolucion_Notas").val();
+                dev.DescuentoSalario = ganan;
+                dev.Cantidad = cantTotal;
+                
+                if (!parar) {
+                    var data = JSON.stringify(dev);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "@Url.Action("Devolucion","Ventas")",//'../Devolucion',
+                        data: data,
+                        contentType: 'application/json; charset=utf-8',
+                 
+                        success: function(response) {
+                            //do your actions
+                        
+                            if (response.Success === 1) {
+
+                                window.location.href = "@Url.Action("Index","Ventas")"; //"../Index";
+                            }
+                            else {
+                                bootbox.alert(response.ex);
+                            }
+                          
+                        },
+                        error: function(response) {
+                            bootbox.alert("Error inesperado: " + JSON.stringify(response));
+                        }
+                    });
+                } 
+                
+
+
+            });
+    </script>
+}

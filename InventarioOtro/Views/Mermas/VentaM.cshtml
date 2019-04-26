@@ -1,0 +1,974 @@
+﻿@model InventarioOtro.ViewModels.VentaViewModel
+
+@{
+    ViewBag.Title = "Ventas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!--<h2>Insertar</h2>-->
+
+@Html.HiddenFor(model => model.Venta.FechaVenta, new { @id = "tFin" })
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <br />
+    <br />
+    @Html.HiddenFor(model => model.Venta.TipoVenta)
+    <div id="venta" style="display: block">
+        <div class="form-horizontal">
+            <h4>Venta</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="row">
+                <div class="col-md-3" style="border: solid 2px #c0c0c0; border-radius: 8px; margin-left: 35px; ">
+
+                    <fieldset>
+                        <legend>Tipo de Venta</legend>
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" id="merma" name="customRadio" class="custom-control-input" checked="">
+                                <label class="custom-control-label" for="mino">Merma</label>
+                            </div>
+
+
+                        </div>
+
+                    </fieldset>
+
+                </div>
+                <div class="col-md-1"></div>
+
+
+            </div>
+            <div class="row" style="margin-top: 25px">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Venta.ClienteId, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @{
+                                string a = ViewBag.Nombre.ToString();
+                            }
+                            <div id="scrollable-dropdown-menu">
+                                @Html.TextBox("Cliente", a, new { @required = true, @placeholder = "Cliente", @class = "form-control ", @type = "text", @style = "width: 140%" })
+                                @Html.ValidationMessage("Cliente", new { @class = "text-danger" })
+                            </div>
+
+                            @Html.DropDownList("ClienteId", null, htmlAttributes: new { @class = "form-control", @style = "display:none" })
+                            @Html.ValidationMessageFor(model => model.Venta.ClienteId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="col-md-1" style="margin-top: 25px">
+
+                    <a role="button">@Html.ActionLink("+", "AddCliente", "Mermas", new { area = "" }, new { @class = "btn btn-primary btn-lg", @title = "Insertar un nuevo cliente" })</a>
+
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Venta.VendedorId, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("VendedorId", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Venta.VendedorId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Venta.FechaVenta, htmlAttributes: new { @class = "control-label col-md-6" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.Venta.FechaVenta, "{0:dd/MM/yyyy}", new { @readonly = true, @class = "form-control", @type = "date" })
+                            @Html.ValidationMessageFor(model => model.Venta.FechaVenta, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Venta.Descuento, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Venta.Descuento, new { htmlAttributes = new { @class = "form-control", @type = "number", @step = 0.05, @min = 0 } })
+                            @Html.ValidationMessageFor(model => model.Venta.Descuento, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Venta.MensajeroId, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <div id="scrollable-dropdown-menu1">
+                                @Html.TextBox("Mensa", "", new { @class = "form-control", @type = "text", @style = "width: 140%" })
+                            </div>
+                            @Html.EditorFor(model => model.Venta.MensajeroId, new { htmlAttributes = new { @class = "form-control", @style = "display:none" } })
+                            @Html.ValidationMessageFor(model => model.Venta.MensajeroId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Venta.GanaMensajero, htmlAttributes: new { @class = "control-label col-md-10" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Venta.GanaMensajero, new { htmlAttributes = new { @class = "form-control", @type = "number", @step = 0.05, @min = 0 } })
+                            @Html.ValidationMessageFor(model => model.Venta.GanaMensajero, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.Label("Productos", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="">
+                            <input id="addP" type="button" class="btn_md btn_carritoin" title="Agregar productos a la venta" style="margin-left: 15px;" />
+                            <!-- <a role="button">Html.ActionLink("+", "Te", "Ventas", new { area = "" }, new {  class = "btn_md btn_carritoin", title = "Agregar productos a la venta", style = "margin-left: 15px;" })</a>-->
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Venta.PrecioTotal, htmlAttributes: new { @class = "control-label col-md-6" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Venta.PrecioTotal, new { htmlAttributes = new { @class = "form-control", @readonly = "true", @type = "number", @min = 0 } })
+                            @Html.ValidationMessageFor(model => model.Venta.PrecioTotal, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <!--<div class="form-group">
+                        Html.Label("Fotos", htmlAttributes: new { class = "control-label col-md-2" })
+                        <div class="">
+                            <a role="button">Html.ActionLink("+", "Create", new { area = "" }, new { class = "btn_md btn_camera", title = "Agregar fotos de la venta", style = "margin-left: 15px;" })</a>
+
+                        </div>
+                    </div>-->
+                    <div class="form-group">
+                        @Html.Label("Estado", htmlAttributes: new { @class = "control-label col-md-6" })
+                        <div class="col-md-10">
+                            @{
+                                var estados = new List<SelectListItem>();
+                                estados.Add(new SelectListItem()
+                                {
+                                    Value = "1",
+                                    Text = "Pedido"
+                                });
+                                estados.Add(new SelectListItem()
+                                {
+                                    Value = "2",
+                                    Text = "Finalizada"
+                                });
+
+                            }
+                            @Html.DropDownListFor(model => model.Venta.Estado, estados, new { @readonly = "true", @class = "form-control" })
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Notas</label>
+                        <div class="col-md-10">
+
+                            @Html.TextAreaFor(model => model.Venta.Descripcion, 2, 100, new { @placeholder = "Apuntes", @class = "form-control ", @type = "text", @style = "width: 111%; max-width:1000px" })
+                            @Html.ValidationMessageFor(model => model.Venta.Descripcion, "", new { @class = "text-danger" })
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-4">
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <table id="tbl_prod_add" class="table table-hover table-responsive-md" style="margin-left: 0px; width: 140%">
+                    <thead>
+                        <tr class="table-primary ">
+                            <th>
+                                Id
+                            </th>
+                            <th>
+                                Artículo
+                            </th>
+                            <th>
+                                Lote
+                            </th>
+                            <!--<th>
+                                Descuento
+                            </th>-->
+
+                            <th>
+                                Cantidad
+                            </th>
+                            <th>
+                                Garantía
+                            </th>
+                            <th>
+                                Precio por producto
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div style="min-height: 100px">
+                <!--<div class="row">
+                    <h5> Fotos de productos en la venta</h5>
+                </div>
+
+                <div class="row">
+                    foreach (var foto in Model.ListSrcFotos)
+                    {
+                    <div class="col-md-4">
+                        <img src=foto width="100%" height="100%" />
+                    </div>
+
+
+                    }
+                </div>-->
+            </div>
+
+            <div style="border: solid 2px #c0c0c0; border-radius: 8px; margin-left: 35px; width: 50%; padding: 5px">
+                <div class="row">
+                    <div class="col-md-8">
+                        @Html.LabelFor(model => model.Venta.CostoTotal, htmlAttributes: new { @class = "control-label col-md-8" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.Label("$" + Model.Venta.CostoTotal, htmlAttributes: new { @id = "Venta_CostoTotal", @class = "control-label col-md-2" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        @Html.LabelFor(model => model.Venta.CantTotalProductos, htmlAttributes: new { @class = "control-label col-md-8" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.Label(Model.Venta.CantTotalProductos.ToString(), htmlAttributes: new { @id = "Venta_CantTotalProductos", @class = "control-label col-md-2" })
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row" style="margin-top: 120px">
+                <div class="col-md-offset-2 col-md-1">
+                    <input id="btnCrear" type="button" value="Aceptar" class="btn btn-primary" />
+                </div>
+                <div class="col-md-offset-2 col-md-2">
+                    <a role="button">@Html.ActionLink("Regresar", "Index", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}
+<div id="agregarP" style="display: none">
+    <br /><br />
+
+    <h4>Agregar Productos</h4>
+    <label>Producto: </label>
+    <div id="scrollable-dropdown-menu2">
+        @Html.TextBox("findP", "", new { @class = "form-control" })
+
+    </div>
+    <br />
+    <br />
+    <div class="row" style="margin-left: -35px;">
+
+        <table id="tbl_prod" class="table table-hover table-responsive-md" style="margin-left: 0px;">
+            <thead>
+                <tr class="table-primary ">
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        Costo
+                    </th>
+                    <th>
+                        Producto
+                    </th>
+                    <th>
+                        Lote
+                    </th>
+                    <th>
+                        Precio
+                    </th>
+                    <th>
+                        Disponibilidad
+                    </th>
+                    <th>
+                        Comprar
+                    </th>
+                    <th>
+                        Garantía
+                    </th>
+
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+
+
+        </table>
+    </div>
+
+    <div class="row" style="margin-top: 120px">
+        <div class="col-md-offset-2 col-md-1">
+            <input id="AcceptAddP" type="button" value="Aceptar" class="btn btn-primary" />
+        </div>
+        <div class="col-md-offset-2 col-md-2">
+            <input id="CancelAddP" type="button" value="Regresar" class="btn btn-primary" />
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        var venta = {
+            "ID": "",
+            "FechaVenta": "",
+            "MensajeroId": "",
+            "VendedorId": "",
+            "ClienteId": "",
+            "GanaMensajero": "",
+            "Descuento": "",
+            "CostoTotal": "",
+            "GanaTotal": "",
+            "PrecioTotal": "",
+            "CantTotalProductos": "",
+            "Estado": "",
+            "Usuario": "",
+            "TipoVenta": "",
+            "Descripcion":"",
+            "DetallesVenta": []
+        };
+
+
+        var vm = venta;
+
+        function exist(id) {
+            var tab = $('#tbl_prod').DataTable();
+            var count = tab.row().count();
+
+            for (var i = 0; i < count; i++) {
+
+                if ($('#tbl_prod').dataTable().fnGetData(i, 0) === id)
+                    return true;
+            }
+            return false;
+        }
+
+        function fnClickAddRow(produ, precio) {
+
+            if (!exist(produ.ID)) {
+                $('#tbl_prod').dataTable().fnAddData([
+                        produ.ID,
+                        produ.Npreccosto,
+                        produ.Carticulo,
+                        produ.Clote,
+                        "$" + precio,
+                        produ.Ndisponibilidad
+                    ]
+                );
+            } else {
+                bootbox.alert("Ese producto ya fue agregado a la venta");
+            }
+
+        }
+
+        function existAdd(id) {
+            var tab = $('#tbl_prod_add').DataTable();
+            var count = tab.row().count();
+
+            for (var i = 0; i < count; i++) {
+
+                if ($('#tbl_prod_add').dataTable().fnGetData(i, 0) === id)
+                    return true;
+            }
+            return false;
+        }
+
+        function fnClickAddRowAdd(deta) {
+
+            var precio = "$" + deta.Precio * deta.Cantidad;
+
+            var garantia = "";
+            if (deta.Garantia === "0") {
+                garantia = "Sin garantía";
+            } else {
+                garantia = deta.Garantia + " días";
+            }
+
+            if (!existAdd(deta.ProductoId)) {
+                $('#tbl_prod_add').dataTable().fnAddData([
+                        deta.ProductoId,
+                        deta.ProductoN,
+                        deta.Lote,
+                        deta.Cantidad,
+                        garantia,
+                        precio
+                    ]
+                );
+            } else {
+                bootbox.alert("Ese producto ya fue agregado a la venta");
+            }
+
+        }
+
+        $(document).ready(function () {
+
+            $("#Venta_GanaMensajero")
+                .on("focus",
+                    function () {
+                        if ($("#Venta_GanaMensajero").val() === "" || parseFloat($("#Venta_GanaMensajero").val()) === 0)
+                            $("#Venta_GanaMensajero").val("");
+                    });
+            $("#Venta_GanaMensajero")
+                .on("blur",
+                    function () {
+                        if ($("#Venta_GanaMensajero").val() === "" || parseFloat($("#Venta_GanaMensajero").val()) === 0)
+                            $("#Venta_GanaMensajero").val(0.00);
+                    });
+            $("#Venta_Descuento")
+                .on("focus",
+                    function () {
+                        if ($("#Venta_Descuento").val() === "" || parseFloat($("#Venta_Descuento").val()) === 0)
+                            $("#Venta_Descuento").val("");
+                    });
+            $("#Venta_Descuento")
+                .on("blur",
+                    function () {
+                        if ($("#Venta_Descuento").val() === "" || parseFloat($("#Venta_Descuento").val()) === 0)
+                            $("#Venta_Descuento").val(0.00);
+                    });
+
+            $("#tbl_prod").on("click",
+                ".borrar",
+                function() {
+
+                    var btn = $(this).parents("tr");
+
+
+                    bootbox.confirm("Seguro desea eliminar de la compra este producto?",
+                        function(ok) {
+                            if (ok) {
+
+                                $("#tbl_prod").DataTable().row(btn).remove().draw();
+
+                            }
+                        });
+                });
+            //////////////////////////////////////TUTORIAL////////////////////////////////////////////////
+            $("#tbl_prod").dataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "searching": false,
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+                columns: [
+                    {
+                        "visible": false,
+                        "bSortable": false
+                    },
+                    {
+                        "visible": false,
+                        "bSortable": false
+                    },
+                    {}, {}, {}, {},
+                    {
+                        "bSortable": false,
+                        render: function() {
+                            return "<input id='Cantidad' type='number' value=0 min=0 class='form-control'>";
+                        }
+                    },
+                    {
+                        "bSortable": false,
+                        render: function() {
+                            return "<input id='Garantia' type='number' value=0  min=0 class='form-control'> días";
+                        }
+                    },
+                    {
+                        "bSortable": false,
+                        render: function() {
+                            return "<input type='button'class='btn_md btn_delete borrar' style='margin-top: 5px;'>";
+                        }
+                    }
+                ]
+
+
+            });
+            $("#tbl_prod_add").dataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "searching": false,
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+                columns: [
+                    {
+                        "visible": false,
+                        "bSortable": false
+                    }, {}, {}, {}, {}, {}
+                ]
+            });
+
+
+            //////////////////////////////////////////////////////////////////////////////////////////////
+
+            var fecha = $("#tFin").val().replace('/', '-').replace('/', '-');
+
+            var dd = fecha.substring(0, 2);
+            var MM = fecha.substring(3, 5);
+            var yy = fecha.substring(6, 10);
+
+            $("#Venta_FechaVenta").val(yy + "-" + MM + "-" + dd);
+//////////////////////////////////busca clientes//////////////////////////////////////////////////////////////////////////////
+
+            var source = "{{Cfirstname}} {{Clastname}}";
+            var template = Handlebars.compile(source);
+
+            var clientes = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace(''),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+
+                remote: {
+                    url: '../api/clientes?query=%QUERY',
+                    wildcard: '%QUERY'
+                }
+
+            });
+
+
+            $("#scrollable-dropdown-menu .form-control").typeahead({
+                    minLength: 1,
+                    highlight: false,
+                    hint: false
+                },
+                {
+                    name: 'clientes',
+                    limit: 50,
+                    display: template,
+                    source: clientes,
+                    templates: {
+                        empty: [
+                            '<div class="empty-message" style="margin-left:10px">',
+                            ' No hay coincidencias',
+                            '</div>'
+                        ].join('\n'),
+                        suggestion: Handlebars.compile('<div>{{Cfirstname}} {{Clastname}}</div>')
+                    }
+                    // suggestions: template(clientes)//Handlebars.compile('<div><strong>{{Cfirstname}}</strong> – {{Clastname}}</div>',clientes)
+                }).on("typeahead:select",
+                function(e, cliente) {
+
+                    //vm.clienteId = cliente.id;
+
+                    $("#ClienteId").val(cliente.ID);
+
+                });
+            ///////////////////////buscar productos//////////////////////////////////
+            var mermas = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('Carticulo'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+
+                remote: {
+                    url: '../api/mermas?query=%QUERY',
+                    wildcard: '%QUERY'
+                }
+
+            });
+            var disp = Handlebars.compile("{{Carticulo}}");
+            $("#scrollable-dropdown-menu2 .form-control").typeahead({
+                    minLength: 1,
+                    highlight: false,
+                    hint: false
+                },
+                {
+                    name: 'productos',
+                    display: disp,
+                    limit: 50,
+                    source: mermas,
+                    templates: {
+                        empty: [
+                            '<div class="empty-message" style="margin-left:10px">',
+                            ' No hay coincidencias',
+                            '</div>'
+                        ].join('\n'),
+                        suggestion: Handlebars.compile(
+                            '<div>' +
+                            '<div class="row">{{Carticulo}} - Desc.: {{Cdescripcion}}</div>' +
+                            '<div class="row">Lote: {{Clote}} - Disp: {{Ndisponibilidad}} - PC: {{Npreccosto}} - PMI: {{Nprecminoris}} - PMA: {{Nprecmayoris}}</div></div>')
+                    }
+                }).on("typeahead:select",
+                function(e, producto) {
+
+
+                    var precio = 0;
+                    if ("1" === $("#Venta_TipoVenta").val()) {
+                        precio = producto.Nprecminoris;
+                        fnClickAddRow(producto, precio);
+                    } else {
+                        precio = producto.Nprecmayoris;
+                        fnClickAddRow(producto, precio);
+                    }
+
+                });
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+            //////////////////BUscar mensajeros///////////////////////////////////////////////////////////////////
+            var mensajeros = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('Nombre'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+
+                remote: {
+                    url: '../api/mensajeroes?query=%QUERY',
+                    wildcard: '%QUERY'
+                }
+
+            });
+            $("#scrollable-dropdown-menu1 .form-control").typeahead(
+                {
+                    minLength: 1,
+                    highlight: false,
+                    hint: false
+                },
+                {
+                    name: 'mensajeroes',
+                    display: 'Nombre',
+                    limit: 50,
+                    source: mensajeros,
+                    templates: {
+                        empty: [
+                            '<div class="empty-message" style="margin-left:10px">',
+                            ' No hay coincidencias',
+                            '</div>'
+                        ].join('\n'),
+                        suggestion: Handlebars.compile(
+                            '<div> {{Nombre}} </div>')
+                    }
+                }).on("typeahead:select",
+                function(e, mensa) {
+
+
+                    $("#Venta_MensajeroId").val(mensa.ID);
+
+                });
+
+            $("#Mensa").on("blur",
+                function() {
+                    if ($("#Mensa").val() === '')
+                        $("#Venta_MensajeroId").val(0);
+                });
+
+
+            $("#Venta_TipoVenta").val(3);
+
+        });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        $('#addP').on("click",
+            function() {
+
+                $("#agregarP").prop("style", "display: block");
+                $("#venta").prop("style", "display: none");
+                $("#agregarP").focus();
+
+
+                if (vm.DetallesVenta.length > 0) {
+                    $("#tbl_prod").dataTable().fnClearTable();
+                    var listDeta = vm.DetallesVenta;
+                    var c = listDeta.length;
+                    var k = 0;
+                    var produ = {
+                        "ID": "",
+                        "Npreccosto": "",
+                        "Carticulo": "",
+                        "Clote": "",
+                        "Ndisponibilidad": ""
+                    };
+
+                    while (k < c) {
+
+
+                        produ.ID = listDeta[k].ProductoId;
+                        produ.Npreccosto = listDeta[k].Costo;
+                        produ.Carticulo = listDeta[k].ProductoN;
+                        produ.Clote = listDeta[k].Lote;
+                        produ.Ndisponibilidad = listDeta[k].Disponibilidad;
+
+                        fnClickAddRow(produ, listDeta[k].Precio);
+                        $('#tbl_prod').dataTable().fnGetNodes(k).children[4].children[0].value = listDeta[k].Cantidad;
+                        $('#tbl_prod').dataTable().fnGetNodes(k).children[5].children[0].value = listDeta[k].Garantia;
+                        k = k + 1;
+                    }
+
+                }
+
+
+            });
+
+
+        $("#CancelAddP").on("click",
+            function() {
+                $('#tbl_prod').dataTable().fnClearTable();
+                $('#mayo').attr("disabled", true);
+                $("#agregarP").prop("style", "display: none");
+                $("#venta").prop("style", "display: block");
+                $("#venta").focus();
+
+                if ($('#tbl_prod_add').DataTable().rows().count() > 0) {
+                    $('#mayo').attr("disabled", true);
+                    $('#mino').attr("disabled", true);
+                } else {
+                    $('#mayo').attr("disabled", false);
+                    $('#mino').attr("disabled", false);
+                }
+            });
+        $("#AcceptAddP").on("click",
+            function() {
+                var tab = $('#tbl_prod').DataTable();
+                var count = tab.rows().count();
+                var parar = false;
+                var dispo = 0;
+                var cantC = 0;
+                var garantia = 0;
+                var producto = "";
+                var productoId = 0;
+                var ventaId = 0;
+                var precio = 0;
+                var lote = "";
+                var costo = 0;
+
+                $('#tbl_prod_add').dataTable().fnClearTable();
+
+
+                if ($('#tbl_prod').DataTable().rows().count() === 0) {
+                    $("#agregarP").prop("style", "display: none");
+                    $("#venta").prop("style", "display: block");
+                    $("#venta").focus();
+                    $('#mayo').attr("disabled", false);
+                    $('#mino').attr("disabled", false);
+                } else {
+                    for (var i = 0; i < count && !parar; i++) {
+
+                        dispo = $('#tbl_prod').dataTable().fnGetData(i, 5);
+                        cantC = $('#tbl_prod').dataTable().fnGetNodes(i).children[4].children[0].value;
+                        garantia = $('#tbl_prod').dataTable().fnGetNodes(i).children[5].children[0].value;
+                        producto = $('#tbl_prod').dataTable().fnGetData(i, 2);
+
+                        if (dispo < cantC) {
+                            bootbox.alert("La cantidad a comprar del producto: " +
+                                producto +
+                                " supera la disponibilidad");
+                            parar = true;
+                            break;
+                        }
+                        if (garantia < 0) {
+                            bootbox.alert("La garantía debe ser mayor o igual a 0");
+                            parar = true;
+                            break;
+                        }
+                        if (cantC <= 0) {
+                            bootbox.alert("La cantidad a comprar debe ser mayor que 0");
+                            parar = true;
+                            break;
+                        }
+
+                    }
+
+                    if (!parar) {
+
+                        var fecha = $("#Venta_FechaVenta").val().replace('-', '/').replace('-', '/');
+
+                        venta.FechaVenta = fecha;
+                        venta.MensajeroId = $("#Venta_MensajeroId").val();
+                        venta.VendedorId = $("#VendedorId").val();
+                        venta.ClienteId = $("#ClienteId").val();
+                        venta.GanaMensajero = $("#Venta_GanaMensajero").val();
+                        venta.Descuento = $("#Venta_Descuento").val().replace(',', '.');;
+                        venta.Descripcion = $("#Venta_Descripcion").val();
+                        venta.Estado = $("#Venta_Estado").val();
+                        venta.TipoVenta = $("#Venta_TipoVenta").val();
+                        venta.DetallesVenta = [];
+                        $("#venta").prop("style", "display: block");
+                        $("#venta").focus();
+                        var costoTotal = 0;
+                        var precioTotal = 0;
+                        var cantTotal = 0;
+                        for (var j = 0; j < count; j++) {
+                            var detalleventa = {
+                                "ID": "",
+                                "ProductoId": "",
+                                "VentaId": "",
+                                "Cantidad": "",
+                                "Garantia": "",
+                                "Descuento": "",
+                                "Precio": "",
+                                "Lote": "",
+                                "ProductoN": "",
+                                "Costo": "",
+                                "Disponibilidad": ""
+                            };
+                            dispo = $('#tbl_prod').dataTable().fnGetData(j, 5);
+                            cantC = $('#tbl_prod').dataTable().fnGetNodes(j).children[4].children[0].value;
+                            garantia = $('#tbl_prod').dataTable().fnGetNodes(j).children[5].children[0].value;
+                            producto = $('#tbl_prod').dataTable().fnGetData(j, 2);
+                            productoId = $('#tbl_prod').dataTable().fnGetData(j, 0);
+                            precio = $('#tbl_prod').dataTable().fnGetData(j, 4).replace("$", "");
+                            lote = $('#tbl_prod').dataTable().fnGetData(j, 3);
+                            costo = $('#tbl_prod').dataTable().fnGetData(j, 1);
+
+                            detalleventa.ID = 0;
+                            detalleventa.ProductoId = productoId;
+                            detalleventa.VentaId = 0;
+                            detalleventa.Cantidad = cantC;
+                            detalleventa.Garantia = garantia;
+                            detalleventa.Precio = precio;
+                            detalleventa.ProductoN = producto;
+                            detalleventa.Lote = lote;
+                            detalleventa.Costo = costo;
+                            detalleventa.Disponibilidad = dispo;
+                            detalleventa.Descuento = 0;
+                            venta.DetallesVenta.push(detalleventa);
+                            costoTotal += parseFloat(costo) * parseFloat(cantC);
+                            precioTotal += parseFloat(precio) * parseFloat(cantC);
+                            cantTotal += parseInt(cantC);
+
+                            fnClickAddRowAdd(detalleventa);
+                        }
+
+                        venta.CostoTotal = costoTotal;
+                        venta.PrecioTotal = precioTotal;
+                        venta.CantTotalProductos = cantTotal;
+                        venta.GanaTotal = precioTotal - costoTotal;
+                        $("#Venta_CostoTotal").text("$" + costoTotal);
+                        $("#Venta_PrecioTotal").val(precioTotal);
+                        $("#Venta_CantTotalProductos").text(cantTotal);
+                        vm = venta;
+                        $("#agregarP").prop("style", "display: none");
+
+                        if ($('#tbl_prod_add').DataTable().rows().count() > 0) {
+                            $('#mayo').attr("disabled", true);
+                            $('#mino').attr("disabled", true);
+                        }
+                    }
+                }
+
+            });
+
+        $("#btnCrear").on("click",
+            function () {
+
+                if ($("#VendedorId").val() === "" || $("#VendedorId").val() === "0") {
+                    bootbox.alert("Vendedor es un campo obligatorio");
+                }else
+                if (vm.ClienteId === 0 || $("#Cliente").val() === "") {
+
+                    bootbox.alert("Cliente es un campo obligatorio");
+
+                } else {
+
+                    if ($("#Venta_FechaVenta").val() === "") {
+                        bootbox.alert("La fecha de la venta es un campo obligatorio");
+                    } else {
+                        if (vm.DetallesVenta.length === 0) {
+                            bootbox.alert("No hay artículos agregados a la venta");
+                        } else {
+                            var fecha = $("#Venta_FechaVenta").val().replace('-', '/').replace('-', '/');
+
+                            vm.FechaVenta = fecha;
+                            vm.MensajeroId = $("#Venta_MensajeroId").val();
+                            vm.VendedorId = $("#VendedorId").val();
+                            vm.ClienteId = $("#ClienteId").val();
+                            vm.GanaMensajero = $("#Venta_GanaMensajero").val();
+                            vm.Descuento = $("#Venta_Descuento").val().replace(',','.');
+                            vm.Descripcion = $("#Venta_Descripcion").val();
+                            vm.Estado = $("#Venta_Estado").val();
+                            vm.TipoVenta = $("#Venta_TipoVenta").val();
+                            var data = JSON.stringify(vm);
+
+                            $.ajax({
+                                type: 'POST',
+                                url: '@Url.Action("VentaM")',//'../Mermas/VentaM',
+                                data: data,
+                                contentType: 'application/json; charset=utf-8',
+
+                                success: function(response) {
+                                    //do your actions
+
+                                    if (response.Success === 1) {
+                                        window.location.href = "@Url.Action("Index","Ventas")";
+                                    }
+                                    else {
+                                        bootbox.alert(response.ex);
+                                    }
+
+                                },
+                                error: function(response) {
+                                    bootbox.alert("Error inesperado: " + JSON.stringify(response));
+                                }
+                            });
+                        }
+                    }
+                }
+
+            });
+    </script>
+}

@@ -1,0 +1,98 @@
+﻿@model InventarioOtro.Models.Movimiento
+
+@{
+    ViewBag.Title = "Eliminar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<h4>Eliminar</h4>
+
+<h3>Está seguro que desea eliminar esto?</h3>
+<div>
+    <h4>Movimiento</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <div class="row">
+            <div class="col-md-4">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Nombre)
+                </dd>
+
+            </div>
+            <div class="col-md-4">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Monto)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Monto)
+                </dd>
+
+            </div>
+            <div class="col-md-4">
+                <dt>
+                    @Html.DisplayNameFor(model => model.TipoMovimiento)
+                </dt>
+
+                <dd>
+                    @if (Model.TipoMovimiento == 1)
+                    {
+                        <p>Ingreso</p>
+                    }
+                    else if (Model.TipoMovimiento == 2)
+                    {
+                        <p>Gasto</p>
+                    }
+                    else
+
+                    {
+                        <p>Extracción</p>
+                    }
+                </dd>
+
+            </div>
+            
+        </div>
+       
+        <div class="row">
+            <div class="col-md-4">
+                <dt>
+                    @Html.DisplayNameFor(model => model.FechaMovimiento)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.FechaMovimiento)
+                </dd>
+            </div>
+            <div class="col-md-4">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Descripcion)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Descripcion)
+                </dd>
+            </div>
+        </div>
+
+        
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-md-offset-2 col-md-1">
+            <input type="submit" value="Borrar" class="btn btn-primary" />
+        </div>
+        <div class="col-md-offset-2 col-md-2">
+            <a role="button">@Html.ActionLink("Regresar", "Index", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+        </div>
+    </div>
+    }
+</div>

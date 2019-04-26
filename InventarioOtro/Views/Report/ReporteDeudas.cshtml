@@ -1,0 +1,140 @@
+﻿@model InventarioOtro.ViewModels.RptDeudasViewModel
+
+
+@{
+    ViewBag.Title = "Reportes de Deudas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<h4>Reportes de Deudas</h4>
+@if (ViewBag.Mensaje)
+{
+    <div class="alert alert-dismissible alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong></strong> <a href="#" class="alert-link"></a> La fecha de fin debe ser mayor que la de inicio
+    </div>
+}
+@Html.HiddenFor(model => model.Fin, new { @id = "tFin" })
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row" style="margin-top: 25px">
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.Label("Fecha de Inicio", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Inicio, "{0:dd/MM/yyyy}", new { @class = "form-control", @type = "date" })
+                    @Html.ValidationMessageFor(model => model.Inicio, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.Label("Fecha de Fin", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Fin, "{0:dd/MM/yyyy}", new { @class = "form-control", @type = "date" })
+                    @Html.ValidationMessageFor(model => model.Fin, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-1">
+
+            <input id="print" type="submit" class="btn_md btn_report" title="Imprimir Reporte" style="margin-top: 40px; margin-left: 25px" />
+
+        </div>
+    </div>
+
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+            $(document).ready(function () {
+
+                    $("#Paso")
+                        .on("blur",
+                            function () {
+                                if ($("#Paso").val() === "" || parseInt($("#Paso").val()) === 0) {
+                                    $("#Paso").val("1");
+                                }
+                                $("#buscarVenta").click();
+                            });
+                var fecha = $("#tFin").val().replace('/', '-').replace('/', '-');
+
+                var dd = fecha.substring(0, 2);
+                var MM = fecha.substring(3, 5);
+                var yy = fecha.substring(6, 10);
+
+                $("#Fin").val(yy + "-" + MM + "-" + dd);
+                $("#Inicio").val(yy + "-" + MM + "-" + dd);
+
+                //////////////////BUscar mensajeros///////////////////////////////////////////////////////////////////
+                var mensajeros = new Bloodhound({
+                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('Nombre'),
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+
+                    remote: {
+                        url: '../api/mensajeroes?query=%QUERY',
+                        wildcard: '%QUERY'
+                    }
+
+                });
+                $("#scrollable-dropdown-menu1 .form-control").typeahead(
+                    {
+                        minLength: 1,
+                        highlight: false,
+                        hint: false
+                    },
+                    {
+                        name: 'mensajeroes',
+                        display: 'Nombre',
+                        source: mensajeros,
+                        templates: {
+                            empty: [
+                                '<div class="empty-message" style="margin-left:10px">',
+                                ' No hay coincidencias',
+                                '</div>'
+                            ].join('\n'),
+                            suggestion: Handlebars.compile(
+                                '<div> {{Nombre}} </div>')
+                        }
+                    }).on("typeahead:select",
+                        function (e, mensa) {
+
+
+                            $("#MensajeroId").val(mensa.ID);
+
+                        });
+
+                $("#Nombre").on("blur",
+                    function () {
+                        if ($("#Mensa").val() === '')
+                            $("#MensajeroId").val(0);
+                    });
+
+        });
+        $("#print").on("click", function (e) {
+
+            if ($("#MensajeroId").val() === 0 || $("#MensajeroId").val()==="") {
+                bootbox.alert("Debe seleccionar un mensajero para imprimir el reporte");
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+        });
+        $("#Fin").on("focus", function () {
+            $("#Fin").attr("type", "date");
+        });
+        $("#Inicio").on("focus", function () {
+            if (!$("#Inicio").attr("readonly"))
+                $("#Inicio").attr("type", "date");
+        });
+    </script>
+}

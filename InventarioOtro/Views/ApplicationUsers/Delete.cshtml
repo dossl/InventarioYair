@@ -1,0 +1,40 @@
+﻿@model InventarioOtro.Models.ApplicationUser
+
+@{
+    ViewBag.Title = "Eliminar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br/>
+<h4>Eliminar</h4>
+
+<h3>Seguro desea borrar esto?</h3>
+<div>
+    <h4>Usuario</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+
+        <dt>
+            Usuario
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <div class="col-md-offset-2 col-md-1">
+                <input type="submit" value="Borrar" class="btn btn-primary" />
+            </div>
+            <div class="col-md-offset-2 col-md-2">
+                <a role="button">@Html.ActionLink("Regresar", "Index", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+            </div>
+        </div>
+    }
+</div>

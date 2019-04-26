@@ -1,0 +1,31 @@
+﻿@model InventarioOtro.Models.Vendedor
+
+@{
+    ViewBag.Title = "Detalles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<h4>Detalles</h4>
+
+<div>
+    <h4>Vendedor</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+    </dl>
+</div>
+<div class="row">
+    <div class="col-md-offset-2 col-md-1">
+        <a role="button">@Html.ActionLink("Editar", "Edit", new { id = Model.ID }, new { @class = "btn btn-primary", @title = "Editar" })</a>
+    </div>
+    <div class="col-md-offset-2 col-md-2">
+        <a role="button">@Html.ActionLink("Regresar", "Index", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+    </div>
+</div>

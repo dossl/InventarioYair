@@ -1,0 +1,34 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+
+<ul class="navbar-nav mr-auto">
+    <li class="nav-item">
+        @Html.ActionLink("Hola " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Gestionar Cuenta" })
+    </li>
+    <!--@if (User.IsInRole("Admin"))
+                {
+                    <li class="nav-item" style="margin-left: 15px; margin-right: 5px">@Html.ActionLink("Registrar", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                }-->
+
+                <li class="nav-item" style="margin-left: 10px"><a href="javascript:document.getElementById('logoutForm').submit()">Salir</a></li>
+            </ul>
+        }
+    }
+    else
+    {
+        <ul class="navbar-nav mr-auto" style="float: right">
+
+        <!--  <li class="nav-item">Html.ActionLink("Registrarse", "Register", "Account", routeValues: null, htmlAttributes: new { class = "nav-link", id = "registerLink" })</li>-->
+    <li class="nav-item">@Html.ActionLink("Entrar", "Login", "Account", routeValues: null, htmlAttributes: new { @class = "nav-link", id = "loginLink" })</li>
+
+
+</ul>
+    <!-- <ul class="nav navbar-nav navbar-right">
+         <li>Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+         <li>Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+     </ul>-->
+}

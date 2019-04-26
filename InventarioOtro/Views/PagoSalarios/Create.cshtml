@@ -1,0 +1,273 @@
+﻿@model InventarioOtro.Models.PagoSalario
+
+@{
+    ViewBag.Title = "Salario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<h4>Calcular</h4>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    string Inicio = ViewBag.Inicio.ToString();
+    string Fin = ViewBag.Fin.ToString();
+
+
+    @Html.Hidden("tInicio", Inicio, new { @id = "tInicio" })
+    @Html.Hidden("tFin", Fin, new { @id = "tFin" })
+    <div class="form-horizontal">
+        <h4>Salario</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Trabajador, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Trabajador, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Trabajador, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DiasDescontado, htmlAttributes: new { @class = "control-label col-md-8" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.DiasDescontado, new { htmlAttributes = new { @class = "form-control", @type = "number", @min = 0, @step = 1 } })
+                        @Html.ValidationMessageFor(model => model.DiasDescontado, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Monto, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.Monto, "", new { @class = "form-control", @readonly = true })
+                        @Html.ValidationMessageFor(model => model.Monto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1">
+
+                <input id="calcular" type="button" class="btn_md btn_coins" title="Calcular Salario" style="margin-top: 40px;margin-left: -45px;" />
+
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8" style="border: solid 2px #c0c0c0; border-radius: 8px; margin-left: 35px; ">
+
+                <fieldset>
+                    <legend>Rango de Pago</legend>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Inicio:</label>
+                                <div class="col-md-10">
+                                    @{
+                                        string inicio = ViewBag.Inicio.ToString();
+                                    }
+                                    @if (ViewBag.Readonly)
+                                    {
+                                        @Html.TextBox("Inicio", inicio, "{0:dd/MM/yyyy}", new { @class = "form-control", @readonly = "true", @type = "date" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBox("Inicio", inicio, "{0:dd/MM/yyyy}", new { @class = "form-control", @required = true, @type = "date" })
+                                    }
+
+                                    @Html.ValidationMessage("Inicio", "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Fin:</label>
+                                <div class="col-md-10">
+                                    @{
+                                        string fin = ViewBag.Fin.ToString();
+                                    }
+                                    @Html.TextBox("Fin", fin, "{0:dd/MM/yyyy}", new { @class = "form-control", @required = true, @type = "date" })
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </fieldset>
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+
+
+
+        <div class="row" style="margin-top: 20px">
+            <div class="col-md-offset-2 col-md-1">
+                <input type="submit" value="Aceptar" class="btn btn-primary" />
+            </div>
+            <div class="col-md-offset-2 col-md-2">
+                <a role="button">@Html.ActionLink("Regresar", "Index", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+    <script>
+        $(document).ready(function () {
+            var fechaI = $("#tInicio").val().replace('/', '-').replace('/', '-');
+            var fechaF = $("#tFin").val().replace('/', '-').replace('/', '-');
+
+            var dd = fechaI.substring(0, 2);
+            var MM = fechaI.substring(3, 5);
+            var yy = fechaI.substring(6, 10);
+            $("#Inicio").val(yy + "-" + MM + "-" + dd);
+
+            dd = fechaF.substring(0, 2);
+            MM = fechaF.substring(3, 5);
+            yy = fechaF.substring(6, 10);
+            $("#Fin").val(yy + "-" + MM + "-" + dd);
+
+            $("#Fin").on("focus", function () {
+                $("#Fin").attr("type", "date");
+            });
+            $("#Inicio").on("focus", function () {
+                if (!$("#Inicio").attr("readonly"))
+                    $("#Inicio").attr("type", "date");
+            });
+
+            $("#Fin").on("change", function () {
+                var rango = {
+                    "Inicio": "",
+                    "Fin": "",
+                    "DiasDescontados": ""
+                };
+                rango.Inicio = $("#Inicio").val();
+                rango.Fin = $("#Fin").val();
+                rango.DiasDescontados = $("#DiasDescontado").val() === "" ? 0 : $("#DiasDescontado").val();
+                var data = JSON.stringify(rango);
+                if ($("#Inicio").val() === "" || $("#Fin").val() === "") {
+                    bootbox.alert("La fecha de Inicio y Fin deben ser válidas ");
+                } else {
+                    $.ajax({
+                        type: 'POST',
+                        url: '../PagoSalarios/Calcular',
+                        data: data,
+                        contentType: 'application/json; charset=utf-8',
+
+                        success: function (response) {
+                            //do your actions
+
+                            if (response.Success === 1) {
+                                $("#Monto").val(response.ID);
+                            }
+                            else {
+                                bootbox.alert(response.ex);
+                            }
+
+                        },
+                        error: function (response) {
+                            bootbox.alert("Error inesperado: " + JSON.stringify(response));
+                        }
+                    });
+                }
+            });
+            $("#Inicio").on("change", function () {
+                var rango = {
+                    "Inicio": "",
+                    "Fin": "",
+                    "DiasDescontados": ""
+                };
+                rango.Inicio = $("#Inicio").val();
+                rango.Fin = $("#Fin").val();
+                rango.DiasDescontados = $("#DiasDescontado").val() === "" ? 0 : $("#DiasDescontado").val();
+                var data = JSON.stringify(rango);
+
+                if ($("#Inicio").val() === "" || $("#Fin").val() === "") {
+                    bootbox.alert("La fecha de Inicio y Fin deben ser válidas ");
+                } else {
+                    $.ajax({
+                        type: 'POST',
+                        url: '../PagoSalarios/Calcular',
+                        data: data,
+                        contentType: 'application/json; charset=utf-8',
+
+                        success: function (response) {
+                            //do your actions
+
+                            if (response.Success === 1) {
+                                $("#Monto").val(response.ID);
+                            }
+                            else {
+                                bootbox.alert(response.ex);
+                            }
+
+                        },
+                        error: function (response) {
+                            bootbox.alert("Error inesperado: " + JSON.stringify(response));
+                        }
+                    });
+                }
+            });
+
+        });
+
+        $("#calcular").on("click", function () {
+            var rango = {
+                "Inicio": "",
+                "Fin": "",
+                "DiasDescontados": ""
+            };
+            rango.Inicio = $("#Inicio").val();
+            rango.Fin = $("#Fin").val();
+            rango.DiasDescontados = $("#DiasDescontado").val() === "" ? 0 : $("#DiasDescontado").val();
+
+            var data = JSON.stringify(rango);
+            if ($("#Inicio").val() === "" || $("#Fin").val() === "") {
+                bootbox.alert("La fecha de Inicio y Fin deben ser válidas ");
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: '../PagoSalarios/Calcular',
+                    data: data,
+                    contentType: 'application/json; charset=utf-8',
+
+                    success: function (response) {
+                        //do your actions
+
+                        if (response.Success === 1) {
+                            $("#Monto").val(response.ID);
+                        }
+                        else {
+                            bootbox.alert(response.ex);
+                        }
+
+                    },
+                    error: function (response) {
+                        bootbox.alert("Error inesperado: " + JSON.stringify(response));
+                    }
+                });
+            }
+
+        });
+    </script>
+
+
+}

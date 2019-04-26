@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="dtsInventarioDB">
+  <ConnectionProperties>
+    <Extension>SQL</Extension>
+    <ConnectString>Data Source=localhost;Initial Catalog=InventarioDB</ConnectString>
+  </ConnectionProperties>
+  <DataSourceID>1d1a8e07-e13d-48b8-8e14-ae8567eee7f6</DataSourceID>
+</RptDataSource>

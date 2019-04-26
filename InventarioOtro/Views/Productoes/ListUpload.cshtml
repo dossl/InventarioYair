@@ -1,0 +1,45 @@
+﻿@model IEnumerable<InventarioOtro.Models.FotoProducto>
+
+@{
+    ViewBag.Title = "Fotos del Producto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<h4>Fotos del Producto</h4>
+
+<div class="row" style="float: right">
+    <p>
+        <a role="button">@Html.ActionLink("+", "Upload", new { id = ViewBag.ID }, new { @class = "btn btn-primary btn-lg", @title = "Agregar Foto" })</a>
+    </p>
+</div>
+<table class="table table-hover table-responsive-md" style="width: 100%; margin-left: 5px;">
+    <tr class="table-primary" >
+        <th>
+            Foto
+        </th>
+      
+       
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImageName)
+            </td>
+        
+            <td>
+
+                @Html.ActionLink("B", "DeleteF", new { id = item.ID }, new { @class = "btn_delete btn_md", @title = "Borrar" })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<div class="row" style="margin-top: 25px">
+    
+    <div class="col-md-offset-2 col-md-2">
+        <a role="button">@Html.ActionLink("Regresar", "Index", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+    </div>
+</div>

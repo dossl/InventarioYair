@@ -1,0 +1,149 @@
+﻿@using PagedList.Mvc
+@model InventarioOtro.ViewModels.IndexMermaViewModel
+@{
+    ViewBag.Title = "Listado Merma";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<h4>Merma</h4>
+<div class="row" style="float: right">
+    <p>
+        <a role="button">@Html.ActionLink("+", "Create", new { area = "" }, new { @class = "btn btn-primary btn-lg", @title = "Insertar un nuevo cliente" })</a>
+    </p>
+</div>
+@using (Html.BeginForm())
+{
+
+    <div class="row form-group">
+        <div class="col-md-1" style="margin-top: 8px; margin-left: 7px">Mostrar</div>
+        <div class="col-md-1" style="margin-left: -13px">@Html.TextBox("Paso", "50", new { @class = "form-control", @type = "number", @min = 1, @style = "width:120%" })</div>
+        <div class="col-md-1 ">@Html.Label("", new { @class = "hidden" })</div>
+        <div class="col-md-2">
+            @Html.DropDownList("categoriaId", new SelectList(Model.ListCategoriaProductos, "ID", "Cnombre"), "Todos", new { @class = "form-control" })
+
+        </div>
+        <div class="col-md-2">@Html.TextBox("SearchString", "", new { @class = "form-control" })</div>
+        <div class="col-md-2">
+            <button id="buscarProducto" type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Buscar según el criterio" data-original-title="Buscar">Buscar</button>
+        </div>
+    </div>
+
+}
+
+<table id="tablam" class="table table-hover table-responsive-md" style="margin-left: 5px">
+    <tr class="table-primary ">
+        <th style="display: none">
+            Id
+        </th>
+        <th>
+            @Html.ActionLink("Artículo", "Index", new { sortOrder = ViewBag.NameSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Categoría", "Index", new { sortOrder = ViewBag.CatSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Lote", "Index", new { sortOrder = ViewBag.LoteSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Cantidad", "Index", new { sortOrder = ViewBag.DisSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Pecio", "Index", new { sortOrder = ViewBag.PrecioSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Costo Total", "Index", new { sortOrder = ViewBag.CostoSortParm })
+        </th>
+        <th></th>
+    </tr>
+    @if (!Model.ListProductos.Any())
+    {
+        <tr><td colspan="7">No hay elementos que mostrar</td></tr>
+    }
+    @foreach (var item in Model.ListProductos)
+    {
+        var a = item.Cantidad * item.Producto.Npreccosto;
+        <tr>
+            <td style="display: none">
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Producto.Carticulo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Producto.CategoriaProducto.Cnombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Producto.Clote)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cantidad)
+            </td>
+            <td>
+                $@Html.DisplayFor(modelItem => item.Precio)
+            </td>
+            <td>
+                $@a
+            </td>
+            <td>
+
+                @Html.ActionLink("E", "Edit", new { id = item.Id }, new { @class = "btn_edit btn_md", @title = "Editar" })
+                <!-- @Html.ActionLink("D", "Details", new {id = item.Id}, new {@class = "btn_detail btn_md", @title = "Detalles"})-->
+                @Html.ActionLink("B", "Delete", new { id = item.Id }, new { @class = "btn_delete btn_md", @title = "Borrar" })
+            </td>
+        </tr>
+    }
+
+</table>
+
+Página @(Model.ListProductos.PageCount < Model.ListProductos.PageNumber ? 0 : Model.ListProductos.PageNumber) de @Model.ListProductos.PageCount
+
+@Html.PagedListPager(Model.ListProductos, page => Url.Action("Index",
+    new { page, SearchString = ViewBag.Search, Paso = ViewBag.Paso, categoriaId = ViewBag.categoriaId }))
+
+
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+    <script>
+        $(document).ready(function() {
+
+            $("#Paso").on("blur",
+                function() {
+                    if ($("#Paso").val() === "" || parseInt($("#Paso").val()) === 0) {
+                        $("#Paso").val("1");
+                    }
+                    $("#buscarProducto").click();
+                });
+        });
+
+        $("#tablam tbody tr:not(.table-primary)").on("click", function () {
+
+
+            var id = this.cells[0].textContent.trim();
+            if (parseInt(id)) {
+                window.location.href = "Mermas/Details/" + id;
+            }
+           
+            /*$.ajax({
+                type: 'GET',
+                url: 'Ventas/Details/'+id,
+                data: "",
+                contentType: 'application/json; charset=utf-8',
+
+                success: function(response) {
+                    toastr.success("OK");
+
+                },
+                error: function(response) {
+                    bootbox.alert("Error inesperado: ");
+                }
+            });*/
+        });
+    </script>
+
+
+}

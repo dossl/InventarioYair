@@ -1,0 +1,151 @@
+﻿@model InventarioOtro.ViewModels.IndexPagoViewModel
+@using PagedList.Mvc
+
+@{
+    ViewBag.Title = "Pago Salarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br/>
+<h4>Salarios</h4>
+
+<div class="row" style="float: right">
+    <p>
+        <a role="button">@Html.ActionLink("+", "Create", new { area = "" }, new { @class = "btn btn-primary btn-lg", @title = "Insertar un nuevo pago" })</a>
+    </p>
+</div>
+
+
+@using (Html.BeginForm())
+{
+    <div class="row form-group">
+        <div class="col-md-1" style="margin-top: 8px; margin-left: 7px">Mostrar</div>
+        <div class="col-md-1" style="margin-left: -13px">@Html.TextBox("Paso", "50", new { @class = "form-control", @type = "number", @min = 1, @style = "width:120%" })</div>
+        <div class="col-md-1 ">@Html.Label("", new { @class = "hidden" })</div>
+        <div class="col-md-3" style="width: 90%">
+            @{
+                var listcriterio = new List<SelectListItem>();
+
+
+                listcriterio.Add(new SelectListItem()
+                {
+                    Value = "1",
+                    Text = "Monto"
+                });
+                listcriterio.Add(new SelectListItem()
+                {
+                    Value = "2",
+                    Text = "Trabajador"
+                });
+                listcriterio.Add(new SelectListItem()
+                {
+                    Value = "3",
+                    Text = "Fecha de Pago"
+                });
+            }
+            @Html.DropDownList("categoriaId", listcriterio, new { @class = "form-control" })
+        </div>
+        <div class="col-md-3" style="width: 90%">@Html.TextBox("SearchString", "", new { @class = "form-control" })</div>
+        <div class="col-md-2">
+            <button id="buscarSal" type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Buscar según el criterio" data-original-title="Buscar">Buscar</button>
+        </div>
+    </div>
+}
+
+
+<table id="tabla" class="table table-hover table-responsive-md" style="margin-left: 5px" >
+    <tr class="table-primary ">
+        <th style="display:none">
+            Id
+        </th>
+        <th>
+            Trabajador
+        </th>
+        <th>
+            Monto
+        </th>
+        <th>
+            Fecha de Pago
+        </th>
+        <th></th>
+    </tr>
+    @if (!Model.ListPagos.Any())
+    {
+        <tr><td colspan="5">No hay elementos que mostrar</td></tr>
+    }
+    @foreach (var item in Model.ListPagos)
+    {
+        <tr>
+            <td style="display:none">
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Trabajador)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Monto)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaPago)
+            </td>
+            <td>
+                
+                @Html.ActionLink("D", "Delete", "PagoSalarios", new {id = item.Id}, new {@class = "btn_delete btn_md", @title = "Eliminar Pago"})
+                @Html.ActionLink("P", "Salario", "Report", new {id = item.Id}, new {@class = "btn_report btn_md", @title = "Imprimir Comprobante"})
+
+            </td>
+        </tr>
+    }
+
+</table>
+Página @(Model.ListPagos.PageCount < Model.ListPagos.PageNumber ? 0 : Model.ListPagos.PageNumber) de @Model.ListPagos.PageCount
+
+@Html.PagedListPager(Model.ListPagos, page => Url.Action("Index",
+    new { page, SearchString = ViewBag.Search, Paso= ViewBag.Paso, categoriaId=ViewBag.categoriaId }))
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+    <script>
+        $(document).ready(function() {
+
+            $("#Paso").on("blur",
+                function() {
+                    if ($("#Paso").val() === "" || parseInt($("#Paso").val()) === 0) {
+                        $("#Paso").val("1");
+                    }
+                    $("#buscarSal").click();
+                });
+
+            if ($("#categoriaId").val() === "1") {
+                $("#SearchString").attr("type", "number");
+                
+            } else if ($("#categoriaId").val() === "2") {
+                $("#SearchString").attr("type", "text");
+                
+            } else {
+                $("#SearchString").attr("type", "date");
+               
+            }
+
+        });
+
+       
+        $("#categoriaId").on("change", function() {
+            if ($("#categoriaId").val() === "1") {
+                $("#SearchString").attr("type", "number");
+                $("#SearchString").val("");
+            } else if ($("#categoriaId").val() === "2") {
+                $("#SearchString").attr("type", "text");
+                $("#SearchString").val("");
+            } else {
+                $("#SearchString").attr("type", "date");
+                $("#SearchString").val("");
+            }
+        });
+    </script>
+
+
+}

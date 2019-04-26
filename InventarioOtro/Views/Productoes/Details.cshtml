@@ -1,0 +1,185 @@
+﻿@model InventarioOtro.ViewModels.DetailProductoViewModel
+
+@{
+    ViewBag.Title = "Detalles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br/>
+<h4>Detalles</h4>
+
+<div>
+    <h4>Producto</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <div class="row">
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Producto.Carticulo)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Producto.Carticulo)
+                </dd>
+            </div>
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Producto.Cdescripcion)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Producto.Cdescripcion)
+                </dd>
+            </div>
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Producto.CategoriaProductoId)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Producto.CategoriaProducto.Cnombre)
+                </dd>
+            </div>
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Producto.Clote)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Producto.Clote)
+                </dd>
+            </div>
+
+        </div>
+        <div class="row" style="margin-top: 15px">
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Producto.Ncantidad)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Producto.Ncantidad)
+                </dd>
+            </div>
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Producto.Ndisponibilidad)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Producto.Ndisponibilidad)
+                </dd>
+            </div>
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Producto.Npreccosto)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Producto.Npreccosto)
+                </dd>
+            </div>
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Producto.Nprecmayoris)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Producto.Nprecmayoris)
+                </dd>
+            </div>
+
+        </div>
+
+        <div class="row" style="margin-top: 15px">
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Producto.Nprecminoris)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Producto.Nprecminoris)
+                </dd>
+            </div>
+            <!--<div class="col-md-3">
+        <dt>
+            @Html.DisplayNameFor(model => model.Producto.Ndescuento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Producto.Ndescuento)
+        </dd>
+    </div>-->
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Producto.Ngananctrab)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Producto.Ngananctrab)
+                </dd>
+            </div>
+            <div class="col-md-3">
+
+            </div>
+
+        </div>
+        <div class="row" style="margin-top: 15px">
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Producto.Lactivo)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Producto.Lactivo)
+                </dd>
+            </div>
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Producto.Linversion)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Producto.Linversion)
+                </dd>
+            </div>
+        </div>
+
+    </dl>
+    
+    <div class="row">
+        <h4> Fotos del producto</h4>
+    </div>
+      
+<div class="row">
+    @foreach (var foto in Model.ListImgSrc)
+    {
+        <div class="col-md-4">
+            <img src=@foto width="100%" height="100%" />
+        </div>
+            
+          
+    }
+ </div>
+
+
+
+</div>
+<div class="row" style="margin-top: 25px">
+    <div class="col-md-offset-2 col-md-1">
+        @if (User.IsInRole("Admin"))
+        {
+            <a role="button">@Html.ActionLink("Editar", "Edit", new {id = Model.Producto.ID}, new {@class = "btn btn-primary", @title = "Editar"})</a>
+        }
+        </div>
+    <div class="col-md-offset-2 col-md-2">
+        @if (ViewBag.Mov)
+        {
+            <a role="button">@Html.ActionLink("Regresar", "Index", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+        }
+        else
+        {
+            <a role="button">@Html.ActionLink("Regresar", "Index","Movimientoes", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+
+        }
+    </div>
+</div>

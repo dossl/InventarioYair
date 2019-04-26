@@ -1,0 +1,266 @@
+﻿@model InventarioOtro.Models.Cliente
+
+@{
+    ViewBag.Title = "Cliente";
+}
+<br />
+<h4>Añadir Cliente</h4>
+
+@if (Model!=null)
+{
+   <div class="alert alert-dismissible alert-danger">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong>Lo sentimos!</strong> <a href="#" class="alert-link">Ya existe un cliente con ese número de identidad.</a> Por favor modifíquelo.
+</div> 
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Información del cliente</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Ccidentidad, htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Ccidentidad, new { htmlAttributes = new { @class = "form-control", @maxlength = "11", @minlength = "11" } })
+                        @Html.ValidationMessageFor(model => model.Ccidentidad, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Cfirstname, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Cfirstname, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Cfirstname, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Clastname, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Clastname, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Clastname, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="row" style="margin-top: 5px">
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Cnumtelefono, htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Cnumtelefono, new { htmlAttributes = new { @class = "form-control", @minlength = "7", @maxlength = "15" } })
+                        @Html.ValidationMessageFor(model => model.Cnumtelefono, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Cdireccion, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(model => model.Cdireccion, 2, 50, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Cdireccion, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Cnotas, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(model => model.Cnotas, 2, 50, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Cnotas, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="checkbox" style="margin-left: 15px">
+                    <label>
+                        @Html.CheckBoxFor(model => model.Lactivo, new { @checked = "checked" }) Activo?
+                        @Html.ValidationMessageFor(model => model.Lactivo, "", new { @class = "text-danger" })
+                    </label>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="row" style="margin-top: 20px">
+            <div class="col-md-offset-2 col-md-1">
+                <input type="submit" value="Aceptar" class="btn btn-primary" />
+            </div>
+            <div class="col-md-offset-2 col-md-2">
+                <a role="button">@Html.ActionLink("Regresar", "Index", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    
+    <script>
+        $(document).ready(function () {
+
+            $("#Ccidentidad").on("keydown", function (event) {
+                var valor = $("#Ccidentidad").val();
+                var val = event.keyCode;
+
+                // Backspace, Tab, Enter, Insert, y Delete y guion -
+                if (val === 46 || val === 8 || val === 9 /*|| val == 13 || val == 45 || val == 46 || val == 109*/) {
+                    return true;
+                }
+                var esnumero = AcceptNum(event);
+                if (esnumero) {
+                   /* valor = valor + event.key;
+                    if (valor.length === 3) {
+                        console.log("tercer caracter");
+                        if (parseInt(valor[2]) > 1) {
+                            console.log("Error t3rc3r");
+                            return false;
+                        }
+                    }
+
+                    if (valor.length === 4) {
+                        console.log("cuarto caracter");
+                        if (parseInt(valor[2]) === 0 && parseInt(valor[3])===0) {
+                            console.log("Error 00");
+                            return false;
+                        }
+
+                        if (parseInt(valor[2]) === 1 && parseInt(valor[3]) > 2) {
+                            console.log("Error mes 13..");
+                            return false;
+                        }
+                    }
+
+                    if (valor.length === 5) {
+                        console.log("5to caracter");
+                        if (parseInt(valor[4]) > 3) {
+                            console.log("Error dia 40");
+                            return false;
+                        }
+
+                        if (parseInt(valor[4]) < 4) {
+                            var mes = valor[2] + valor[3];
+                            
+                            if (parseInt(mes) === 2 && parseInt(valor[4]) > 2) {
+                                console.log("Error mes febrero no llega 30..");
+                                return false;
+                            }
+                            
+                        }
+                    }
+
+                    if (valor.length === 6) {
+                        console.log("6to caracter");
+                        var mes = valor[2] + valor[3];
+
+                        if (parseInt(valor[4])===3 && (parseInt(mes) === 4 || parseInt(mes) === 6 || parseInt(mes) === 9 || parseInt(mes) === 11) && parseInt(valor[5]) > 0) {
+                            console.log("Error mes febrero no llega 30..");
+                            return false;
+                        }
+
+                        if (parseInt(valor[4]) === 3 && parseInt(valor[5]) > 1) {
+                            console.log("Error mes febrero no llega 31..");
+                            return false;
+                        }
+                    }*/
+
+                }
+
+                return esnumero;
+
+            });
+
+            $("#Cfirstname").on("keydown", function (event) {
+                var val = event.keyCode;
+
+                // Backspace , Tab, Enter, Insert, y Delete y guion -
+                if (val === 46 || val === 32 || val === 8 || val === 9 /*|| val == 13 || val == 45 || val == 46 || val == 109*/) {
+                    return true;
+                }
+                return AcceptLetra(event);
+
+            });
+            $("#Clastname").on("keydown", function (event) {
+                var val = event.keyCode;
+
+                // Backspace, Tab, Enter, Insert, y Delete y guion -
+                if (val === 46 || val === 32 || val === 8 || val === 9 /*|| val == 13 || val == 45 || val == 46 || val == 109*/) {
+                    return true;
+                }
+                return AcceptLetra(event);
+
+            });
+
+            $("#Cnumtelefono").on("keydown", function (event) {
+                var val = event.keyCode;
+
+                // Backspace, Tab, Enter, Insert, y Delete y guion -
+                if (val === 46 || val === 32 || val === 8 || val === 9 /*|| val == 13 || val == 45 || val == 46 || val == 109*/) {
+                    return true;
+                }
+                return AcceptNum(event);
+
+            });
+
+
+        });
+        // Script para validar la entrada de numeros y un punto --%>
+        function AcceptNum(event) {
+            //if (event === null) return false;
+            var browser = window.Event ? true : false;
+            var key = browser ? event.key : event.which;
+            console.log(key);
+            if (/^[0-9]+$/.test(key)) {
+                console.log("SI");
+                return true;
+            }
+            console.log("NO");
+            ///evento.preventDefault();
+            return false;
+        }
+
+        // Script para validar la entrada de letras  --%>
+        function AcceptLetra(event) {
+            //if (event === null) return false;
+            var browser = window.Event ? true : false;
+            var key = browser ? event.key : event.which;
+            console.log(key);
+            if (/^[a-zA-Z]+$/.test(key)) {
+                console.log("SI");
+                return true;
+            }
+            console.log("NO");
+            ///evento.preventDefault();
+            return false;
+        }
+
+    </script>
+
+
+}

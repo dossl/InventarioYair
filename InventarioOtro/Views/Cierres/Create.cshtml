@@ -1,0 +1,114 @@
+﻿@model InventarioOtro.Models.Cierre
+
+@{
+    ViewBag.Title = "Cierre";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+    <h4>Cierre</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <dl class="dl-horizontal">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <dt>
+                        @Html.LabelFor(model => model.ValorTotalVentas, htmlAttributes: new { @class = "control-label col-md-8" })
+                    </dt>
+                    <div class="col-md-10">
+                        $@Html.DisplayFor(model => model.ValorTotalVentas, new { htmlAttributes = new { @class = "form-control" } })
+                         @Html.TextBoxFor(model => model.ValorTotalVentas,  new { @class = "form-control", @style="display: none" })
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <dt>
+                        @Html.LabelFor(model => model.CantidadArticulos, htmlAttributes: new { @class = "control-label col-md-8" })
+                    </dt>
+                    <div class="col-md-10">
+                        @Html.DisplayFor(model => model.CantidadArticulos, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.TextBoxFor(model => model.CantidadArticulos, new { @class = "form-control", @style = "display: none" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <dt>
+                        @Html.LabelFor(model => model.GananciasPeriodo, htmlAttributes: new { @class = "control-label col-md-4" })
+                    </dt>
+                    <div class="col-md-10">
+
+                        $@Html.DisplayFor(model => model.GananciasPeriodo, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.TextBoxFor(model => model.GananciasPeriodo, new { @class = "form-control", @style = "display: none" })
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="row">
+            <!--  <div class="col-md-4">
+          <div class="form-group">
+              <dt>
+                  @Html.LabelFor(model => model.CantArticulosDev, htmlAttributes: new { @class = "control-label col-md-8" })
+              </dt>
+              <div class="col-md-10">
+                  @Html.DisplayFor(model => model.CantArticulosDev, new { htmlAttributes = new { @class = "form-control" } })
+                  @Html.TextBoxFor(model => model.CantArticulosDev, new { @class = "form-control", @style = "display: none" })
+              </div>
+          </div>
+      </div>-->
+            <div class="col-md-4">
+                <div class="form-group">
+                    <dt>
+                        @Html.LabelFor(model => model.Fecha, htmlAttributes: new { @class = "control-label col-md-4" })
+                    </dt>
+                    <div class="col-md-10">
+                        @Html.DisplayFor(model => model.Fecha, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.TextBoxFor(model => model.Fecha, new { @class = "form-control", @style = "display: none" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <dt>
+                        @Html.LabelFor(model => model.GananciaExtraida, htmlAttributes: new { @class = "control-label col-md-8" })
+                    </dt>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.GananciaExtraida, new { @class = "form-control", @type = "number", @step = 0.01, @min = 0, @max = Model.GananciasPeriodo })
+                        @Html.ValidationMessageFor(model => model.GananciaExtraida, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </dl>
+
+
+
+
+
+
+        <div class="row" style="margin-top: 20px">
+            <div class="col-md-offset-2 col-md-1">
+                <input type="submit" value="Cierre" class="btn btn-primary" />
+            </div>
+            <div class="col-md-offset-2 col-md-2">
+                <a role="button">@Html.ActionLink("Regresar", "Index", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+            </div>
+        </div>
+</div>
+        }
+

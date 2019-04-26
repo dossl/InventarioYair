@@ -1,0 +1,185 @@
+﻿@model InventarioOtro.ViewModels.IndexCierreViewModel
+@using PagedList.Mvc
+
+@{
+    ViewBag.Title = "Cierres";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<h4>Cierres</h4>
+
+
+<div class="row" style="float: right">
+    <p>
+        <a role="button">@Html.ActionLink("+", "Create", new { area = "" }, new { @class = "btn btn-primary btn-lg", @title = "Insertar un nuevo pago" })</a>
+    </p>
+</div>
+
+
+@using (Html.BeginForm())
+{
+    <div class="row form-group">
+        <div class="col-md-1" style="margin-top: 8px; margin-left: 7px">Mostrar</div>
+        <div class="col-md-1" style="margin-left: -13px">@Html.TextBox("Paso", "50", new { @class = "form-control", @type = "number", @min = 1, @style = "width:120%" })</div>
+        <div class="col-md-1 ">@Html.Label("", new { @class = "hidden" })</div>
+        <div class="col-md-3" style="width: 90%">
+            @{
+                var listcriterio = new List<SelectListItem>();
+
+
+                /* listcriterio.Add(new SelectListItem()
+                 {
+                     Value = "1",
+                     Text = "Monto"
+                 });
+                 listcriterio.Add(new SelectListItem()
+                 {
+                     Value = "2",
+                     Text = "Trabajador"
+                 });*/
+                listcriterio.Add(new SelectListItem()
+                {
+                    Value = "3",
+                    Text = "Fecha de Cierre"
+                });
+            }
+            @Html.DropDownList("categoriaId", listcriterio, new { @class = "form-control" })
+        </div>
+        <div class="col-md-3" style="width: 90%">@Html.TextBox("SearchString", "", new { @class = "form-control" })</div>
+        <div class="col-md-2">
+            <button id="buscarSal" type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Buscar según el criterio" data-original-title="Buscar">Buscar</button>
+        </div>
+    </div>
+}
+
+
+    <table id="tabla" class="table table-hover table-responsive-md" style="margin-left: 5px">
+        <tr class="table-primary ">
+
+            <th>
+                Ganancias
+            </th>
+            <th>
+                Cantidad Vendida
+            </th>
+            <th>
+                Valor Total
+            </th>
+            <th>
+                Cantidad Devuelta
+            </th>
+            <th>
+                Ganancia Extraida
+            </th>
+            <th>
+                Fecha
+            </th>
+            <th></th>
+        </tr>
+        @if (!Model.ListCierres.Any())
+        {
+            <tr><td colspan="6">No hay elementos que mostrar</td></tr>
+        }
+        @foreach (var item in Model.ListCierres)
+        {
+            <tr>
+                <td>
+                    $@Html.DisplayFor(modelItem => item.GananciasPeriodo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CantidadArticulos)
+                </td>
+                <td>
+                    $@Html.DisplayFor(modelItem => item.ValorTotalVentas)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CantArticulosDev)
+                </td>
+                <td>
+                   $@Html.DisplayFor(modelItem => item.GananciaExtraida)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fecha)
+                </td>
+                <!--<td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>-->
+            </tr>
+        }
+
+    </table>
+Página @(Model.ListCierres.PageCount < Model.ListCierres.PageNumber ? 0 : Model.ListCierres.PageNumber) de @Model.ListCierres.PageCount
+
+@Html.PagedListPager(Model.ListCierres, page => Url.Action("Index",
+    new { page, SearchString = ViewBag.Search, Paso= ViewBag.Paso, categoriaId=ViewBag.categoriaId }))
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+    <script>
+        $(document).ready(function () {
+
+            $("#Paso").on("blur",
+                function () {
+                    if ($("#Paso").val() === "" || parseInt($("#Paso").val()) === 0) {
+                        $("#Paso").val("1");
+                    }
+                    $("#buscarSal").click();
+                });
+
+            if ($("#categoriaId").val() === "1") {
+                $("#SearchString").attr("type", "number");
+
+            } else if ($("#categoriaId").val() === "2") {
+                $("#SearchString").attr("type", "text");
+
+            } else {
+                $("#SearchString").attr("type", "date");
+
+            }
+
+        });
+
+       /* $("#tabla tbody tr:not(.table-primary)").on("click",
+            function () {
+
+
+                var id = this.cells[0].textContent.trim();
+                if (parseInt(id)) {
+                    window.location.href = "/PagoSalarios/Details/" + id;
+                }
+                /*$.ajax({
+                    type: 'GET',
+                    url: 'Ventas/Details/'+id,
+                    data: "",
+                    contentType: 'application/json; charset=utf-8',
+
+                    success: function(response) {
+                        toastr.success("OK");
+
+                    },
+                    error: function(response) {
+                        bootbox.alert("Error inesperado: ");
+                    }
+                });
+            });*/
+        $("#categoriaId").on("change", function () {
+            if ($("#categoriaId").val() === "1") {
+                $("#SearchString").attr("type", "number");
+                $("#SearchString").val("");
+            } else if ($("#categoriaId").val() === "2") {
+                $("#SearchString").attr("type", "text");
+                $("#SearchString").val("");
+            } else {
+                $("#SearchString").attr("type", "date");
+                $("#SearchString").val("");
+            }
+        });
+    </script>
+
+
+}

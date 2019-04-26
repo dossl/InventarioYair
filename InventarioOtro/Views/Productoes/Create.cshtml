@@ -1,0 +1,271 @@
+﻿@model InventarioOtro.ViewModels.ProductoViewModel
+
+@{
+    ViewBag.Title = "Crear";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br/>
+<h4>Insertar</h4>
+@if (ViewBag.Mensaje)
+{
+    <div class="alert alert-dismissible alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Lo sentimos!</strong> <a href="#" class="alert-link">Pero no hay efectivo para afrontar la compra de esa cantidad de producto.</a> Disminuya la cantidad o marque la comprar como inversión
+    </div>
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Producto</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Producto.Carticulo, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Producto.Carticulo, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Producto.Carticulo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Producto.Cdescripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(model => model.Producto.Cdescripcion, 2, 50, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Producto.Cdescripcion, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Producto.CategoriaProductoId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(m => m.Producto.CategoriaProductoId, new SelectList(Model.TipoCategoriaProductos, "ID", "Cnombre"), "Seleccione una categoría", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Producto.CategoriaProductoId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Producto.Clote, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Producto.Clote, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Producto.Clote, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row" style="margin-top: 5px">
+
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Producto.Ncantidad, htmlAttributes: new { @class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Producto.Ncantidad, new { htmlAttributes = new { @class = "form-control", @min = 1, @data_val_number = "El campo debe ser un número" } })
+                        @Html.ValidationMessageFor(model => model.Producto.Ncantidad, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Producto.Ndisponibilidad, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Producto.Ndisponibilidad, new { htmlAttributes = new {@readonly="true", @class = "form-control", @type = "text", @min = 1 } })
+                        @Html.ValidationMessageFor(model => model.Producto.Ndisponibilidad, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Producto.Npreccosto, htmlAttributes: new { @class = "col-form-label col-md-10" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Producto.Npreccosto, new { htmlAttributes = new { @class = "form-control", @type = "number", @min = 0.00, @step = 0.05 } })
+                        @Html.ValidationMessageFor(model => model.Producto.Npreccosto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Producto.Nprecmayoris, htmlAttributes: new { @class = "col-form-label col-md-11" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Producto.Nprecmayoris, new { htmlAttributes = new { @class = "form-control", @type = "number", @min = 0.00, @step = 0.05 } })
+                        @Html.ValidationMessageFor(model => model.Producto.Nprecmayoris, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px">
+
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Producto.Nprecminoris, htmlAttributes: new { @class = "control-label col-md-11" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Producto.Nprecminoris, new { htmlAttributes = new { @class = "form-control", @type = "number", @min = 0.00, @step = 0.05 } })
+                        @Html.ValidationMessageFor(model => model.Producto.Nprecminoris, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Producto.Ngananctrab, htmlAttributes: new { @class = "control-label col-md-10" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Producto.Ngananctrab, new { htmlAttributes = new { @class = "form-control", @type = "number", @min = 0, @max = 1, @step = 0.05 } })
+                        @Html.ValidationMessageFor(model => model.Producto.Ngananctrab, "", new { @class = "text-danger" })
+
+                    </div>
+                </div>
+            </div>
+            <!--<div class="col-md-4">
+        <div class="form-group">
+            Html.LabelFor(model => model.Producto.Ndescuento, htmlAttributes: new { class = "control-label col-md-2" })
+            <div class="col-md-10">
+                Html.EditorFor(model => model.Producto.Ndescuento, new { htmlAttributes = new { class = "form-control", type = "number", min = 0, step = 0.05 } })
+                Html.ValidationMessageFor(model => model.Producto.Ndescuento, "", new { class = "text-danger" })
+            </div>
+        </div>
+    </div>-->
+            @{
+                var listcriterio = new List<SelectListItem>();
+
+
+                listcriterio.Add(new SelectListItem()
+                {
+                    Value = "1",
+                    Text = "Es Inversión"
+                });
+                listcriterio.Add(new SelectListItem()
+                {
+                    Value = "2",
+                    Text = "Compra"
+                });
+
+            }
+            <div class="col-md-4">
+                <div class="form-group">
+                    @Html.Label("Inversión?", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("esInv", new SelectList(listcriterio, "Value", "Text"), "Seleccione...", new { @class = "form-control",@name="esInv", @required = "", @data_val_required = "El campo Inversión es obligatorio." })
+                        @Html.ValidationMessage("esInv", "", new { @class = "text-danger" })
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row" style="margin-top: 5px">
+
+            <div class="col-md-4">
+                <div class="checkbox" style="margin-left: 15px">
+                    <label>
+                        @Html.CheckBoxFor(model => model.Producto.Lactivo, new { @checked = "checked" }) Activo?
+                        @Html.ValidationMessageFor(model => model.Producto.Lactivo, "", new { @class = "text-danger" })
+                    </label>
+                </div>
+            </div>
+           
+            <div class="col-md-4">
+                <div class="checkbox" style="margin-left: 15px">
+                    <label>
+                        @Html.CheckBoxFor(model => model.Producto.Linversion, new { @style = "display: none" }) <!--Inversión?-->
+                        @Html.ValidationMessageFor(model => model.Producto.Linversion, "", new { @class = "text-danger" })
+                    </label>
+                </div>
+            </div>
+
+        </div>
+
+
+
+        <div class="row" style="margin-top: 20px">
+            <div class="col-md-offset-2 col-md-1">
+                <input type="submit" value="Aceptar" class="btn btn-primary" />
+            </div>
+            <div class="col-md-offset-2 col-md-2">
+                <a role="button">@Html.ActionLink("Regresar", "Index", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $("#Producto_Ndisponibilidad")
+            .on("keydown",
+                function() {
+                    return false;
+                });
+        $("#Producto_Ncantidad")
+            .on("blur",
+                function() {
+                    $("#Producto_Ndisponibilidad").val($("#Producto_Ncantidad").val());
+            });
+        $("#Producto_Ncantidad")
+            .on("focus",
+            function () {
+                if ($("#Producto_Ncantidad").val() === "" || parseFloat($("#Producto_Ncantidad").val())===0)
+                    $("#Producto_Ncantidad").val("");
+            });
+
+        $("#Producto_Npreccosto")
+            .on("focus",
+                function () {
+                    if ($("#Producto_Npreccosto").val() === "" || parseFloat($("#Producto_Npreccosto").val()) === 0)
+                        $("#Producto_Npreccosto").val("");
+            });
+
+        $("#Producto_Nprecmayoris")
+            .on("focus",
+                function () {
+                    if ($("#Producto_Nprecmayoris").val() === "" || parseFloat($("#Producto_Nprecmayoris").val()) === 0)
+                        $("#Producto_Nprecmayoris").val("");
+            });
+
+        $("#Producto_Nprecminoris")
+            .on("focus",
+                function () {
+                    if ($("#Producto_Nprecminoris").val() === "" || parseFloat($("#Producto_Nprecminoris").val()) === 0)
+                        $("#Producto_Nprecminoris").val("");
+            });
+        $("#Producto_Ngananctrab")
+            .on("focus",
+                function () {
+                    if ($("#Producto_Ngananctrab").val() === "" || parseFloat($("#Producto_Ngananctrab").val()) === 0)
+                        $("#Producto_Ngananctrab").val("");
+                });
+
+
+        $(document)
+            .ready(function() {
+
+                $("#esInv").change(function() {
+                    if ($("#esInv").val() === "1") {
+                        $("#Producto_Linversion").attr("checked", true);
+
+                    } else {
+                        $("#Producto_Linversion").attr("checked", false);
+                    }
+                });
+
+
+            });
+
+    </script>
+
+}

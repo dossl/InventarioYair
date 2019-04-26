@@ -1,0 +1,189 @@
+﻿@using PagedList.Mvc
+@model InventarioOtro.ViewModels.IndexDeudasViewModel
+
+@{
+    ViewBag.Title = "Deudas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<h4>Listado de Deudas</h4>
+@using (Html.BeginForm())
+{
+    <div class="row form-group">
+        <div class="col-md-1" style="margin-top: 8px; margin-left: 7px">Mostrar</div>
+        <div class="col-md-1" style="margin-left: -13px">@Html.TextBox("Paso", "50", new { @class = "form-control", @type = "number", @min = 1, @style = "width:120%" })</div>
+        <div class="col-md-1 ">@Html.Label("", new { @class = "hidden" })</div>
+        <div class="col-md-3" style="width: 90%">
+            @{
+                var listcriterio = new List<SelectListItem>();
+
+
+                listcriterio.Add(new SelectListItem()
+                {
+                    Value = "1",
+                    Text = "Monto"
+                });
+                listcriterio.Add(new SelectListItem()
+                {
+                    Value = "2",
+                    Text = "Cliente"
+                });
+                listcriterio.Add(new SelectListItem()
+                {
+                    Value = "3",
+                    Text = "Fecha de Pago"
+                });
+            }
+            @Html.DropDownList("categoriaId", listcriterio, new { @class = "form-control" })
+        </div>
+        <div class="col-md-3" style="width: 90%">@Html.TextBox("SearchString", "", new { @class = "form-control" })</div>
+        <div class="col-md-2">
+            <button id="buscarSal" type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Buscar según el criterio" data-original-title="Buscar">Buscar</button>
+        </div>
+    </div>
+}
+
+
+<table id="tablaD" class="table table-hover table-responsive-md" style="margin-left: 5px">
+    <tr class="table-primary ">
+        <th style="display: none">
+            Id
+        </th>
+        <th>
+            Cliente
+        </th>
+        <th>
+            Valor Inicial
+        </th>
+        <th>
+            Valor Actual
+        </th>
+        <th>
+            Fecha de Creación
+        </th>
+        <th>
+            Último Pago
+        </th>
+        <th></th>
+    </tr>
+    @if (!Model.ListDeudas.Any())
+    {
+        <tr><td colspan="5">No hay elementos que mostrar</td></tr>
+    }
+    @foreach (var item in Model.ListDeudas)
+    {
+        <tr>
+            <td style="display: none">
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Venta.Cliente.Cfirstname) @Html.DisplayFor(modelItem => item.Venta.Cliente.Clastname)
+            </td>
+            <td>
+                $@Html.DisplayFor(modelItem => item.ValorInicial)
+            </td>
+
+            <td>
+                $@Html.DisplayFor(modelItem => item.ValorActual)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaCreacion)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.UltimoPago)
+            </td>
+
+            <td>
+                @if (item.ValorActual != 0)
+                {
+                    @Html.ActionLink("E", "Edit", new { id = item.Id }, new { @class = "btn_edit btn_md", @title = "Editar" })
+                    <!--@Html.ActionLink("D", "Details", new { id = item.Id }, new { @class = "btn_detail btn_md", @title = "Cambiar estado" })-->
+
+                    @Html.ActionLink("B", "Delete", new { id = item.Id }, new { @class = "btn_delete btn_md", @title = "Borrar" })
+
+                }
+
+
+
+            </td>
+        </tr>
+    }
+
+</table>
+Página @(Model.ListDeudas.PageCount < Model.ListDeudas.PageNumber ? 0 : Model.ListDeudas.PageNumber) de @Model.ListDeudas.PageCount
+@Html.PagedListPager(Model.ListDeudas, page => Url.Action("Index",
+    new { page, SearchString = ViewBag.Search, Paso= ViewBag.Paso, categoriaId=ViewBag.categoriaId }))
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+
+            $("#Paso").on("blur",
+                function () {
+                    if ($("#Paso").val() === "" || parseInt($("#Paso").val()) === 0) {
+                        $("#Paso").val("1");
+                    }
+                    $("#buscarVenta").click();
+                });
+            if ($("#categoriaId").val() === "1") {
+                $("#SearchString").attr("type", "number");
+
+            } else if ($("#categoriaId").val() === "2") {
+                $("#SearchString").attr("type", "text");
+
+            } else {
+                $("#SearchString").attr("type", "date");
+
+            }
+
+
+
+
+
+
+        });
+
+
+        $("#categoriaId").on("change", function () {
+            if ($("#categoriaId").val() === "1") {
+                $("#SearchString").attr("type", "number");
+                $("#SearchString").val("");
+            } else if ($("#categoriaId").val() === "2") {
+                $("#SearchString").attr("type", "text");
+                $("#SearchString").val("");
+            } else {
+                $("#SearchString").attr("type", "date");
+                $("#SearchString").val("");
+            }
+        });
+
+        $("#tablaD tbody tr:not(.table-primary)").on("click",
+            function () {
+
+
+                var id = this.cells[0].textContent.trim();
+                if (parseInt(id)) {
+                    window.location.href = "Deudas/Details/" + id;
+                }
+
+                /*$.ajax({
+                    type: 'GET',
+                    url: 'Ventas/Details/'+id,
+                    data: "",
+                    contentType: 'application/json; charset=utf-8',
+
+                    success: function(response) {
+                        toastr.success("OK");
+
+                    },
+                    error: function(response) {
+                        bootbox.alert("Error inesperado: ");
+                    }
+                });*/
+            });
+    </script>
+
+
+}

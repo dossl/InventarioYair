@@ -1,0 +1,45 @@
+﻿@model IEnumerable<InventarioOtro.Models.ApplicationUser>
+
+@{
+    ViewBag.Title = "Usuarios del Sistema";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<h4>Listado de usuarios</h4>
+
+<div class="row" style="float: right">
+    <p>
+        <a role="button">@Html.ActionLink("+", "Register","Account", new { area = "" }, new { @class = "btn btn-primary btn-lg", @title = "Insertar un nuevo usuario" })</a>
+    </p>
+</div>
+<table class="table table-hover table-responsive-md" style="width: 100%; margin-left: 5px">
+    <tr class="table-primary">
+        <th>
+           Usuario
+        </th>
+        <th></th>
+    </tr>
+
+    @if (!Model.Any())
+    {
+        <tr><td colspan="1">No hay elementos que mostrar</td></tr>
+    }
+    @foreach (var item in Model)
+    {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.ActionLink("E", "Index", "Manage", new { id = item.Id }, new { @class = "btn_edit btn_md", @title = "Cambiar Contraseña" })
+                @if (item.UserName != "admin")
+                {
+                    @Html.ActionLink("D", "Delete", new { id = item.Id }, new { @class = "btn_delete btn_md", @title = "Eliminar Usuario" })
+                }
+
+            </td>
+        </tr>
+    }
+
+</table>

@@ -1,0 +1,81 @@
+﻿@model InventarioOtro.Models.Merma
+
+@{
+    ViewBag.Title = "Editar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<h4>Editar</h4>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <br/>
+        <h4>Merma</h4>
+        <hr/>
+        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+        @Html.HiddenFor(model => model.Id)
+        @{
+            string a = ViewBag.Nombre;
+            string cantAnt = ViewBag.CantAnt.ToString();
+        }
+        @Html.Hidden("CantAnt", cantAnt)
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ProductoId, htmlAttributes: new {@class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        <div id="scrollable-dropdown-menu">
+                            
+                            @Html.TextBox("findP", a, new {@class = "form-control", @placeholder = "Producto", @readonly = "true", @type = "text", @style = "width: 140%"})
+
+                        </div>
+                        @Html.DropDownList("ProductoId", null, htmlAttributes: new {@class = "form-control", @style = "display:none"})
+                        @Html.ValidationMessageFor(model => model.ProductoId, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Cantidad, htmlAttributes: new {@class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Cantidad, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.Cantidad, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Precio, htmlAttributes: new {@class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.Precio, "", new {@class = "form-control", @type = "number", @step = 0.05, @min = 0.05})
+                        @Html.ValidationMessageFor(model => model.Precio, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="row" style="margin-top: 20px">
+            <div class="col-md-offset-2 col-md-1">
+                <input id="id_submit" type="submit" value="Aceptar" class="btn btn-primary"/>
+            </div>
+            <div class="col-md-offset-2 col-md-2">
+                <a role="button">@Html.ActionLink("Regresar", "Index", new {area = ""}, new {@class = "btn btn-primary", @title = "Regresar"})</a>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,290 @@
+﻿@model InventarioOtro.ViewModels.DetailVentaViewModel
+
+@{
+    ViewBag.Title = "Detalles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br/>
+<h4>Detalles</h4>
+
+<div>
+<h4>Venta</h4>
+@if (Model.Venta.TipoVenta == 1)
+{
+    <p>Minorista</p>
+}else if (Model.Venta.TipoVenta == 3)
+{
+    <p>Merma</p>
+}
+else
+{
+    <p>Mayorista</p>
+}
+    <hr />
+    <dl class="dl-horizontal">
+        <div class="row">
+            <div class="col-md-3">
+                <dt>
+                    Cliente
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Venta.Cliente.Cfirstname) @Html.DisplayFor(model => model.Venta.Cliente.Clastname)
+                </dd>
+            </div>
+            <div class="col-md-3">
+                <dt>
+                    Vendedor
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Venta.Vendedor.Nombre)
+                </dd>
+            </div>
+
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Venta.FechaVenta)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Venta.FechaVenta)
+                </dd>
+            </div>
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Venta.Usuario)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Venta.Usuario)
+                </dd>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-3">
+                <dt>
+                    Cantidad Total Vendida
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Venta.CantTotalProductos)
+                </dd>
+            </div>
+            <div class="col-md-3">
+                <dt>
+                   Valor Venta<!--@Html.DisplayNameFor(model => model.Venta.PrecioTotal)-->
+                </dt>
+
+                <dd>
+                    $@Html.DisplayFor(model => model.Venta.PrecioTotal)
+                </dd>
+
+
+            </div>
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Venta.CostoTotal)
+                </dt>
+
+                <dd>
+                    $@Html.DisplayFor(model => model.Venta.CostoTotal)
+                </dd>
+
+            </div>
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Venta.GanaTotal)
+                </dt>
+
+                <dd>
+                    $@Html.DisplayFor(model => model.Venta.GanaTotal)
+                </dd>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Venta.MensajeroId)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.NombreMensajero)
+                </dd>
+            </div>
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Venta.GanaMensajero)
+                </dt>
+
+                <dd>
+                    $@Html.DisplayFor(model => model.Venta.GanaMensajero)
+                </dd>
+
+
+            </div>
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Venta.Descuento)
+                </dt>
+
+                <dd>
+                    $@Html.DisplayFor(model => model.Venta.Descuento)
+                </dd>
+            </div>
+            <div class="col-md-3">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Venta.Estado)
+                </dt>
+
+                <dd>
+                    @if (Model.Venta.Estado == 1)
+                    {
+                        <p>Pedido</p>
+                    }
+                    else if (Model.Venta.Estado == 2)
+                    {
+                        <p>Finalizada</p>
+                    }
+                    else if (Model.Venta.Estado == 3)
+                    {
+                        <p>Devolución</p>
+                    }
+                    else if (Model.Venta.Estado == 4)
+                    {
+                        <p>Cerrada</p>
+                    }
+                </dd>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <dt>
+                    Comisión
+                </dt>
+
+                <dd>
+                    $@Html.DisplayFor(model => model.Venta.GanaTrab)
+                </dd>
+            </div>
+           
+          
+           
+        </div>
+    </dl>
+    <br/>
+    <dt>Artículos en la venta</dt>
+    <br/>
+    <table id="tabla" class="table table-hover table-responsive-md" style="width: 100%; margin-left: 0px;">
+        <tr class="table-primary ">
+            
+               <th>
+                    Artículo
+                </th>
+                <th>
+                    Lote
+                </th>
+                <!--<th>
+                    Descuento
+                </th>-->
+                
+                <th>
+                    Comprado
+                </th>
+                <th>
+                    Garantía
+                </th>
+                <th>
+                    Valor de Venta
+                </th>
+           
+            
+        </tr>
+    @if (!Model.Venta.DetallesVenta.Any())
+    {
+        <tr><td colspan="5">No hay elementos que mostrar</td></tr>
+    }
+    @foreach (var item in Model.Venta.DetallesVenta)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Producto.Carticulo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Producto.Clote)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cantidad)
+            </td>
+
+            <td>
+                @if (item.Garantia == 0)
+                {
+                    <p>Sin garantía</p>
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.Garantia) <p>días</p>
+                }
+               
+            </td>
+            <td>
+                @if (Model.Venta.TipoVenta==1)
+                {
+                    var precio =item.Producto.Nprecminoris * item.Cantidad;
+                    <p>$@precio</p>
+                }
+                else
+                {
+                    var precio = item.Producto.Nprecmayoris * item.Cantidad;
+                    <p>$@precio</p>
+                }
+                
+            </td>
+           
+
+           
+        </tr>
+    }
+
+    </table>
+    <br/>
+    <div class="row">
+        <h4> Fotos de la Venta</h4>
+    </div>
+      
+    <div class="row">
+        @foreach (var foto in Model.ListImgSrc)
+        {
+            <div class="col-md-4">
+                <img src=@foto width="100%" height="100%" />
+            </div>
+            
+          
+        }
+    </div>
+
+</div>
+<div class="row" style="margin-top: 25px">
+    <div class="col-md-offset-2 col-md-1">
+        @if (Model.Venta.Estado != 3 && Model.Venta.Estado != 4)
+        {
+            <!-- <a role="button">@Html.ActionLink("Editar", "Edit", new {id = Model.Venta.ID}, new {@class = "btn btn-primary", @title = "Editar"})</a>-->
+        }
+    </div>
+    <div class="col-md-offset-2 col-md-2">
+        @if (ViewBag.Mov)
+        {
+            <a role="button">@Html.ActionLink("Regresar", "Index", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+        }
+        else
+        {
+            <a role="button">@Html.ActionLink("Regresar", "Index", "Movimientoes", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+
+        }
+    </div>
+</div>
+

@@ -1,0 +1,178 @@
+﻿@model InventarioOtro.ViewModels.IndexProductoViewModel
+@using System.Web.UI.WebControls
+@using PagedList.Mvc;
+@using InventarioOtro.Models
+@{
+    ViewBag.Title = "Productos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br/>
+<h4>Listado de Productos</h4>
+
+@if (User.IsInRole("Admin"))
+{
+    <div class="row" style="float: right">
+    <p>
+        <a role="button">@Html.ActionLink("+", "Create", new { area = "" }, new { @class = "btn btn-primary btn-lg", @title = "Insertar un nuevo producto" })</a>
+    </p>
+</div>
+}
+
+@using (Html.BeginForm())
+{
+
+    <div class="row form-group">
+        <div class="col-md-1" style="margin-top: 8px; margin-left: 7px">Mostrar</div>
+        <div class="col-md-1" style="margin-left: -13px">@Html.TextBox("Paso", "50", new { @class = "form-control", @type = "number", @min = 1, @style = "width:120%" })</div>
+        <div class="col-md-1 ">@Html.Label("", new { @class = "hidden" })</div>
+        <div class="col-md-2">
+            @Html.DropDownList("categoriaId", new SelectList(Model.ListCategoriaProductos, "ID", "Cnombre"), "Todos", new { @class = "form-control" })
+
+        </div>
+        <div class="col-md-2">@Html.TextBox("SearchString", "", new { @class = "form-control" })</div>
+        <div class="col-md-2">
+            <button id="buscarProducto" type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Buscar según el criterio" data-original-title="Buscar">Buscar</button>
+        </div>
+    </div>
+
+}
+
+<table id="tablap" class="table table-hover table-responsive-md" style="margin-left: 5px">
+    <tr class="table-primary ">
+        <th style="display:none">ID</th>
+        <th style="text-align: center">
+            @Html.ActionLink("Activo", "Index", new { sortOrder = ViewBag.ActiveSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Artículo", "Index", new { sortOrder = ViewBag.NameSortParm })
+        </th>
+        <th style="width: 20%">
+            Desc.
+        </th>
+        <th>
+            @Html.ActionLink("Categoría", "Index", new { sortOrder = ViewBag.CatSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Lote", "Index", new { sortOrder = ViewBag.LoteSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Disp", "Index", new { sortOrder = ViewBag.DisSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("PMI", "Index", new { sortOrder = ViewBag.PrecMinSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("PMA", "Index", new { sortOrder = ViewBag.PrecMaySortParm })
+        </th>
+        <th>
+            @Html.ActionLink("PC", "Index", new { sortOrder = ViewBag.PrecCoSortParm })
+        </th>
+
+
+        <th></th>
+    </tr>
+    @if (!Model.ListProductos.Any())
+    {
+        <tr><td colspan="9">No hay elementos que mostrar</td></tr>
+    }
+    @foreach (var item in Model.ListProductos)
+    {
+        <tr>
+            <td style="display:none">@Html.DisplayFor(modelItem => item.ID)</td>
+            <td style="text-align: center">
+                @Html.DisplayFor(modelItem => item.Lactivo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Carticulo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cdescripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoriaProducto.Cnombre)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Clote)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Ndisponibilidad)
+            </td>
+            <td>
+                $@Html.DisplayFor(modelItem => item.Nprecminoris)
+            </td>
+            <td>
+                $@Html.DisplayFor(modelItem => item.Nprecmayoris)
+            </td>
+            <td>
+                $@Html.DisplayFor(modelItem => item.Npreccosto)
+            </td>
+
+
+            <td>
+                @Html.ActionLink("C", "ReCreate", new { id = item.ID }, new { @class = "btn_plus btn_md", @title = "Nueva Compra" })
+                @Html.ActionLink("F", "ListUpload", new { id = item.ID }, new { @class = "btn_camera btn_md", @title = "Agregar Foto" })
+                @if (User.IsInRole("Admin"))
+                {
+                    @Html.ActionLink("E", "Edit", new { id = item.ID }, new { @class = "btn_edit btn_md", @title = "Editar" })
+                }
+                <!-- @Html.ActionLink("D", "Details", new {id = item.ID}, new {@class = "btn_detail btn_md", @title = "Detalles"})-->
+                @Html.ActionLink("B", "Delete", new { id = item.ID }, new { @class = "btn_delete btn_md", @title = "Borrar" })
+            </td>
+        </tr>
+    }
+
+</table>
+Página @(Model.ListProductos.PageCount < Model.ListProductos.PageNumber ? 0 : Model.ListProductos.PageNumber) de @Model.ListProductos.PageCount
+
+@Html.PagedListPager(Model.ListProductos, page => Url.Action("Index",
+    new { page, SearchString = ViewBag.Search, Paso= ViewBag.Paso, categoriaId=ViewBag.categoriaId }))
+
+
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+    <script>
+        $(document).ready(function() {
+
+            $("#Paso").on("blur",
+                function() {
+                    if ($("#Paso").val() === "" || parseInt($("#Paso").val()) === 0) {
+                        $("#Paso").val("1");
+                    }
+                    $("#buscarProducto").click();
+                });
+        });
+
+        $("#tablap tbody tr:not(.table-primary)").on("click",
+            function() {
+
+
+                var id = this.cells[0].textContent.trim();
+                if (parseInt(id)) {
+                    window.location.href = "Productoes/Details/" + id;
+                }
+                /*$.ajax({
+                    type: 'GET',
+                    url: 'Ventas/Details/'+id,
+                    data: "",
+                    contentType: 'application/json; charset=utf-8',
+                                
+                    success: function(response) {
+                        toastr.success("OK");
+                                         
+                    },
+                    error: function(response) {
+                        bootbox.alert("Error inesperado: ");
+                    }
+                });*/
+            });
+    </script>
+
+
+}

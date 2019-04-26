@@ -1,0 +1,89 @@
+﻿@model InventarioOtro.Models.Deuda
+
+@{
+    ViewBag.Title = "Detalles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br/>
+<h4>Detalles</h4>
+
+<div>
+    <h4>Deuda</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <div class="row">
+            <div class="col-md-4">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Venta.Cliente)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Venta.Cliente.Cfirstname) @Html.DisplayFor(model => model.Venta.Cliente.Clastname)
+                </dd>
+
+            </div>
+            <div class="col-md-4">
+                <dt>
+                    @Html.DisplayNameFor(model => model.ValorInicial)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.ValorInicial)
+                </dd>
+
+            </div>
+            <div class="col-md-4">
+                <dt>
+                    @Html.DisplayNameFor(model => model.ValorActual)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.ValorActual)
+                </dd>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="row" style="margin-top: 10px">
+           
+            <div class="col-md-4">
+                <dt>
+                    @Html.DisplayNameFor(model => model.FechaCreacion)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.FechaCreacion)
+                </dd>
+
+            </div>
+            <div class="col-md-4">
+               
+                <dt>
+                    @Html.DisplayNameFor(model => model.UltimoPago)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.UltimoPago)
+                </dd>
+
+            </div>
+        </div>
+
+
+
+
+       
+
+    </dl>
+</div>
+<div class="row">
+    <div class="col-md-offset-2 col-md-1">
+        <a role="button">@Html.ActionLink("Editar", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary", @title = "Editar" })</a>
+    </div>
+    <div class="col-md-offset-2 col-md-2">
+        <a role="button">@Html.ActionLink("Regresar", "Index", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+    </div>
+</div>

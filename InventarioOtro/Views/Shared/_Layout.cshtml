@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpg" href="~/logo1.jpg" />
+    <title>@ViewBag.Title </title>
+    <link href="~/Content/bootstrap-flaty.css" rel="stylesheet" />
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/fonts")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+
+
+
+
+
+</head>
+<body>
+
+    <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <img src="~/logo1.jpg" width="205" height="55" /><!--<a class="navbar-brand" href="#">InventarioOtro</a>-->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a>@Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</a>
+
+                    </li>
+                    <li class="nav-item">
+                        <a>@Html.ActionLink("Clientes", "Index", "Clientes", new { area = "" }, new { @class = "nav-link" })</a>
+                    </li>
+                    <li class="nav-item">
+                        <a>@Html.ActionLink("Productos", "Index", "Productoes", new { area = "" }, new { @class = "nav-link" })</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a>@Html.ActionLink("Ventas", "Index", "Ventas", new { area = "" }, new { @class = "nav-link" })</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Merma</a>
+                        <div class="dropdown-menu">
+                            @Html.ActionLink("Gestionar", "Index", "Mermas", new { area = "" }, new { @class = "dropdown-item" })
+                            <div class="dropdown-divider"></div>
+                            @Html.ActionLink("Vender Merma", "VentaM", "Mermas", new { area = "" }, new { @class = "dropdown-item" })
+
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Finanzas</a>
+                        <div class="dropdown-menu">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                @Html.ActionLink("Cierre", "Index", "Cierres", new { area = "" }, new { @class = "dropdown-item" })
+                                <div class="dropdown-divider"></div>
+                            }
+                            @Html.ActionLink("Deudas", "Index", "Deudas", new { area = "" }, new { @class = "dropdown-item" })
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <div class="dropdown-divider"></div>
+                                @Html.ActionLink("Salario", "Index", "PagoSalarios", new { area = "" }, new { @class = "dropdown-item" })
+
+                                <div class="dropdown-divider"></div>
+                                @Html.ActionLink("Movimientos", "Index", "Movimientoes", new { area = "" }, new { @class = "dropdown-item" })
+                            }
+
+
+
+                        </div>
+                    </li>
+
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Reportes</a>
+                        <div class="dropdown-menu">
+                            @Html.ActionLink("Mensajería", "ReporteMensajeria", "Report", new { area = "" }, new { @class = "dropdown-item" })
+                            <div class="dropdown-divider"></div>
+                            @Html.ActionLink("Ventas", "ReporteVentas", "Report", new { area = "" }, new { @class = "dropdown-item" })
+                            <div class="dropdown-divider"></div>
+                            @Html.ActionLink("Deudas", "ReporteDeudas", "Report", new { area = "" }, new { @class = "dropdown-item" })
+                            <div class="dropdown-divider"></div>
+                            @Html.ActionLink("Gastos", "ReporteGastos", "Report", new { area = "" }, new { @class = "dropdown-item" })
+
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Útiles</a>
+                        <div class="dropdown-menu">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                @Html.ActionLink("Categoría de Productos", "Index", "CategoriaProductoes", new {area = ""}, new {@class = "dropdown-item"})
+
+                                <div class="dropdown-divider"></div>
+                            }
+                                @Html.ActionLink("Vendedores", "Index", "Vendedors", new { area = "" }, new { @class = "dropdown-item" })
+                                <div class="dropdown-divider"></div>
+                                @Html.ActionLink("Mensajero", "Index", "Mensajeros", new { area = "" }, new { @class = "dropdown-item" })
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <div class="dropdown-divider"></div>
+                                    @Html.ActionLink("Usuarios", "Index", "ApplicationUsers", new { area = "" }, new { @class = "dropdown-item" })
+                                }
+
+
+
+                            </div>
+                    </li>
+                </ul>
+                <div class="row" style="margin-left: 45px" >@Html.Partial("_LoginPartial")</div> 
+                <!-- <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="text" placeholder="Search">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+    </form>-->
+            </div>
+        </nav>
+    </div>
+
+
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year Inventario by DOSSL</p>
+        </footer>
+    </div>
+
+    <script src="~/Scripts/bootstrap.js"></script>
+   
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,147 @@
+﻿@using PagedList.Mvc
+@model InventarioOtro.ViewModels.VentaDetallesViewModel
+
+@{
+    ViewBag.Title = "Agregar productos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Agregar Productos</h2>
+
+@using (Html.BeginForm())
+{
+
+    <div class="row form-group">
+        <div class="col-md-1" style="margin-top: 8px; margin-left: 7px">Mostrar</div>
+        <div class="col-md-1" style="margin-left: -13px">@Html.TextBox("Paso", "10", new { @class = "form-control", @type = "number", @min = 1, @style = "width:120%" })</div>
+        <div class="col-md-1 ">@Html.Label("", new { @class = "hidden" })</div>
+        <div class="col-md-2">
+            @Html.DropDownList("categoriaId", new SelectList(Model.ListCategoriaProductos, "ID", "Cnombre"), "Todos", new { @class = "form-control" })
+
+        </div>
+        <div class="col-md-2">@Html.TextBox("SearchString", "", new { @class = "form-control" })</div>
+        <div class="col-md-2">
+            <button id="buscarProducto" type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Buscar según el criterio" data-original-title="Buscar">Buscar</button>
+        </div>
+    </div>
+
+}
+<table class="table table-hover table-responsive-md" style="margin-left: 0px; width: 100%">
+    <tr class="table-primary ">
+        <th>
+            Producto
+        </th>
+        <th>
+            Precio
+        </th>
+        <th>
+            Disponibilidad
+        </th>
+        <th>
+            Comprar
+        </th>
+        <th>
+            Garantía
+        </th>
+        <th></th>
+    </tr>
+
+    @if (!Model.ListProductos.Any())
+    {
+        <tr><td colspan="6">No hay elementos que mostrar</td></tr>
+    }
+    @foreach (var item in Model.ListProductos)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Carticulo)
+            </td>
+            <td>
+                @if (ViewBag.Min)
+                {
+                    <div class="row">
+                        <div class="col-md-1">$</div>
+                        <div class="col-md-1" style="margin-left: -20px">@Html.DisplayFor(modelItem => item.Nprecminoris)</div>
+                    </div>
+
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col-md-1">$</div>
+                        <div class="col-md-1" style="margin-left: -20px">@Html.DisplayFor(modelItem => item.Nprecmayoris)</div>
+                    </div>
+                }
+
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ndisponibilidad)
+            </td>
+            <td>
+                @Html.TextBox("Acomprar", "0", new { @class = "form-control", @type = "number", @min = 0, @step = 1, @max = item.Ndisponibilidad })
+            </td>
+            <td>
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.TextBox("Garantia", "0", new { @class = "form-control", @type = "number", @min = 0, @step = 1 })
+                    </div>
+                    <div class="col-md-1">días</div>
+                </div>
+
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+            </td>
+        </tr>
+    }
+
+</table>
+Página @(Model.ListProductos.PageCount < Model.ListProductos.PageNumber ? 0 : Model.ListProductos.PageNumber) de @Model.ListProductos.PageCount
+
+@Html.PagedListPager(Model.ListProductos, page => Url.Action("Index",
+    new { page, SearchString = ViewBag.Search, Paso= ViewBag.Paso, categoriaId=ViewBag.categoriaId }))
+
+@using (Html.BeginForm("Save", "VentaDetalles"))
+{
+    <div class="row" style="margin-top: 120px">
+        <div class="col-md-offset-2 col-md-1">
+            <input type="submit" value="Aceptar" class="btn btn-primary" />
+        </div>
+        <div class="col-md-offset-2 col-md-2">
+            <a role="button">@Html.ActionLink("Regresar", "Create", "Ventas", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+        </div>
+    </div>
+}
+
+  
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $("#Acomprar").on("keydown",
+            function () {
+
+                return false;
+            });
+
+        $("#Garantia").on("keydown",
+            function () {
+                return false;
+            });
+        $(document).ready(function () {
+
+            $("#Paso").on("blur",
+                function () {
+                    if ($("#Paso").val() === "" || parseInt($("#Paso").val()) === 0) {
+                        $("#Paso").val("1");
+                    }
+                    $("#buscarProducto").click();
+                });
+        });
+    </script>
+
+}

@@ -1,0 +1,93 @@
+﻿@model InventarioOtro.Models.Cliente
+
+@{
+    ViewBag.Title = "Eliminar Cliente";
+}
+<br />
+<h4>Eliminar</h4>
+
+<h3>Realmente desea eliminar el cliente?</h3>
+<div>
+   
+    <hr />
+    <dl class="dl-horizontal">
+        <div class="row">
+            <div class="col-md-4">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Cfirstname) y  @Html.DisplayNameFor(model => model.Clastname)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Cfirstname) @Html.DisplayFor(model => model.Clastname)
+                </dd>
+            </div>
+            <div class="col-md-4">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Ccidentidad)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Ccidentidad)
+                </dd>
+
+            </div>
+            <div class="col-md-4">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Cnumtelefono)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Cnumtelefono)
+                </dd>
+
+            </div>
+        </div>
+        <div class="row" style="margin-top: 8px">
+            <div class="col-md-4">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Cdireccion)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Cdireccion)
+                </dd>
+            </div>
+            <div class="col-md-4">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Cnotas)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Cnotas)
+                </dd>
+
+            </div>
+            <div class="col-md-4">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Lactivo)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Lactivo)
+                </dd>
+            </div>
+        </div>
+
+
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+
+        <div class="row">
+            <div class="col-md-offset-2 col-md-1">
+                <input type="submit" value="Borrar" class="btn btn-primary" />
+            </div>
+            <div class="col-md-offset-2 col-md-2">
+                <a role="button">@Html.ActionLink("Regresar", "Index", new { area = "" }, new { @class = "btn btn-primary", @title = "Regresar" })</a>
+            </div>
+        </div>
+    }
+</div>

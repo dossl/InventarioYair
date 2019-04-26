@@ -1,0 +1,186 @@
+﻿@using PagedList.Mvc
+@model InventarioOtro.ViewModels.DetailVentaViewModel
+
+@{
+    ViewBag.Title = "Cambiar estado";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br/>
+<br />
+<h4>Cambiar estado de la venta</h4>
+
+@using (Html.BeginForm("VentaCambiarEstado", "Mermas"))
+{
+    @Html.AntiForgeryToken()
+   
+    @Html.HiddenFor(model => model.Venta.TipoVenta)
+    @Html.HiddenFor(model => model.Venta.ID)
+    <div id="venta" style="display: block">
+        <div class="form-horizontal">
+            <h4>Venta</h4>
+            @if (Model.Venta.TipoVenta == 1)
+            {
+                <p>Minorista</p>
+            }
+            else
+            {
+                <p>Merma</p>
+            }
+
+            <hr />
+            <dl class="dl-horizontal">
+                <div class="row">
+                    <div class="col-md-3">
+                        <dt>
+                            Cliente
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Venta.Cliente.Cfirstname) @Html.DisplayFor(model => model.Venta.Cliente.Clastname)
+                        </dd>
+                    </div>
+                    <div class="col-md-3">
+                        <dt>
+                            Vendedor
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Venta.Vendedor.Nombre)
+                        </dd>
+                    </div>
+            
+                    <div class="col-md-3">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Venta.FechaVenta)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Venta.FechaVenta)
+                        </dd>
+                    </div>
+                    <div class="col-md-3">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Venta.Usuario)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Venta.Usuario)
+                        </dd>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-3">
+                        <dt>
+                            Cantidad Total Vendida
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Venta.CantTotalProductos)
+                        </dd>
+                    </div>
+                    <div class="col-md-3">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Venta.PrecioTotal)
+                        </dt>
+
+                        <dd>
+                            $@Html.DisplayFor(model => model.Venta.PrecioTotal)
+                        </dd>
+
+
+                    </div>
+                    <div class="col-md-3">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Venta.CostoTotal)
+                        </dt>
+
+                        <dd>
+                            $@Html.DisplayFor(model => model.Venta.CostoTotal)
+                        </dd>
+
+                    </div>
+                    <div class="col-md-3">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Venta.GanaTotal)
+                        </dt>
+
+                        <dd>
+                            $@Html.DisplayFor(model => model.Venta.GanaTotal)
+                        </dd>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-3">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Venta.MensajeroId)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.NombreMensajero)
+                        </dd>  
+                    </div>
+                    <div class="col-md-3">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Venta.GanaMensajero)
+                        </dt>
+
+                        <dd>
+                            $@Html.DisplayFor(model => model.Venta.GanaMensajero)
+                        </dd>
+
+ 
+                    </div>
+                    <div class="col-md-3">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Venta.Descuento)
+                        </dt>
+
+                        <dd>
+                            $@Html.DisplayFor(model => model.Venta.Descuento)
+                        </dd>
+                    </div>
+                    <div class="col-md-3">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Venta.Estado)
+                        </dt>
+
+                        <dd>
+                            @{
+                                var estados = new List<SelectListItem>();
+                                estados.Add(new SelectListItem()
+                                {
+                                    Value = "1",
+                                    Text = "Pedido"
+                                });
+                                estados.Add(new SelectListItem()
+                                {
+                                    Value = "2",
+                                    Text = "Finalizada"
+                                });
+                           
+                            }
+                            @Html.DropDownListFor(model => model.Venta.Estado, estados, new { @class = "form-control"})
+                        </dd>
+                    </div>
+                </div>
+
+       
+            </dl>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 20px">
+        <div class="col-md-offset-2 col-md-1">
+            <input id="btnCrear" type="submit" value="Aceptar" class="btn btn-primary"/>
+        </div>
+        <div class="col-md-offset-2 col-md-2">
+            <a role="button">@Html.ActionLink("Regresar", "Index","Ventas", new {area = ""}, new {@class = "btn btn-primary", @title = "Regresar"})</a>
+        </div>
+    </div>
+}
+   
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

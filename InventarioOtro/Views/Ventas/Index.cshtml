@@ -1,0 +1,374 @@
+﻿   @using PagedList.Mvc
+@model InventarioOtro.ViewModels.IndexVentaViewModel
+
+@{
+    ViewBag.Title = "Ventas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<br />
+@if (ViewBag.Validar)
+{
+    @Html.Hidden("validacion", "1")
+}
+else
+{
+    @Html.Hidden("validacion", "0")
+}
+
+<h4>Listado de Ventas</h4>
+
+<div class="row" style="float: right">
+    <p>
+        <a role="button">@Html.ActionLink("+", "Create", new { area = "" }, new { @class = "btn btn-primary btn-lg", @title = "Insertar un nuevo cliente" })</a>
+    </p>
+</div>
+
+
+@using (Html.BeginForm())
+{
+    <div class="row form-group">
+        <div class="col-md-1" style="margin-top: 8px; margin-left: 7px">Mostrar</div>
+        <div class="col-md-1" style="margin-left: -13px">@Html.TextBox("Paso", "50", new { @class = "form-control", @type = "number", @min = 1, @style = "width:120%" })</div>
+        <div class="col-md-1 ">@Html.Label("", new { @class = "hidden" })</div>
+        <div class="col-md-2">
+            @{
+                var listcriterio = new List<SelectListItem>();
+
+
+                listcriterio.Add(new SelectListItem()
+                {
+                    Value = "1",
+                    Text = "Cliente"
+                });
+                listcriterio.Add(new SelectListItem()
+                {
+                    Value = "2",
+                    Text = "Tipo de venta"
+                });
+                listcriterio.Add(new SelectListItem()
+                {
+                    Value = "3",
+                    Text = "Precio"
+                });
+                listcriterio.Add(new SelectListItem()
+                {
+                    Value = "4",
+                    Text = "Cantidad"
+                });
+                listcriterio.Add(new SelectListItem()
+                {
+                    Value = "5",
+                    Text = "Estado"
+                });
+            }
+            @Html.DropDownList("categoriaId", listcriterio, new { @class = "form-control" })
+
+        </div>
+        @{
+            var listcriterio1 = new List<SelectListItem>();
+
+            listcriterio1.Add(new SelectListItem()
+            {
+                Value = "1",
+                Text = "Minorista"
+            });
+            listcriterio1.Add(new SelectListItem()
+            {
+                Value = "2",
+                Text = "Mayorista"
+            });
+            listcriterio1.Add(new SelectListItem()
+            {
+                Value = "3",
+                Text = "Merma"
+            });
+            var listcriterio2 = new List<SelectListItem>();
+
+            listcriterio2.Add(new SelectListItem()
+            {
+                Value = "1",
+                Text = "Pedido"
+            });
+            listcriterio2.Add(new SelectListItem()
+            {
+                Value = "2",
+                Text = "Finalizada"
+            });
+            listcriterio2.Add(new SelectListItem()
+            {
+                Value = "3",
+                Text = "Devolución"
+            });
+            listcriterio2.Add(new SelectListItem()
+            {
+                Value = "4",
+                Text = "Cerrada"
+            });
+
+        }
+
+        <div class="col-md-2">@Html.TextBox("SearchString", "", new { @class = "form-control" })@Html.DropDownList("SearchString1", new SelectList(listcriterio1, "Value", "Text"), "Seleccione", new { @class = "form-control" })@Html.DropDownList("SearchString2", new SelectList(listcriterio2, "Value", "Text"), "Seleccione", new { @class = "form-control" })</div>
+        <div class="col-md-2">
+            <button id="buscarVenta" type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Buscar según el criterio" data-original-title="Buscar">Buscar</button>
+        </div>
+    </div>
+}
+
+
+<table id="tablaV" class="table table-hover table-responsive-md" style="margin-left: 5px">
+    <tr class="table-primary ">
+        <th style="display: none">
+            Id
+        </th>
+        <th>
+            @Html.ActionLink("Cliente", "Index", new { sortOrder = ViewBag.NameSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Vendedor", "Index", new { sortOrder = ViewBag.VenSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Tipo Venta", "Index", new { sortOrder = ViewBag.TipSortParm }) 
+        </th>
+
+        <th>
+            @Html.ActionLink("Cant. Artículos", "Index", new { sortOrder = ViewBag.CanSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Precio", "Index", new { sortOrder = ViewBag.MontoSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Estado", "Index", new { sortOrder = ViewBag.EstadoSortParm })  
+        </th>
+        <th>
+            @Html.ActionLink("Fecha de Venta", "Index", new { sortOrder = ViewBag.DateSortParm })
+        </th>
+
+        <th></th>
+    </tr>
+
+    @if (!Model.ListVentas.Any())
+    {
+        <tr><td colspan="8">No hay elementos que mostrar</td></tr>
+    }
+    @foreach (var item in Model.ListVentas)
+    {
+        <tr>
+            <td style="display: none">
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cliente.Cfirstname) @Html.DisplayFor(modelItem => item.Cliente.Clastname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Vendedor.Nombre)
+            </td>
+            <td>
+                @if (item.TipoVenta == 1)
+                {
+                    <p>Minorista</p>
+                }
+                else
+                {
+                    if (item.TipoVenta == 2)
+                    {
+                        <p>Mayorista</p>
+                    }
+                    else
+                    {
+                        <p>Merma</p>
+                    }
+
+                }
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.CantTotalProductos)
+            </td>
+            <td>
+                @{
+                    decimal venta = item.PrecioTotal - item.Descuento;
+                }
+                
+
+                $@venta
+
+            </td>
+            <td>
+                @if (item.Estado == 1)
+                {
+                    <p>Pedido</p>
+                }
+                else if (item.Estado == 2)
+                {
+                    <p>Finalizada</p>
+
+                }
+                else if (item.Estado == 3)
+                {
+                    <p>Devolución</p>
+
+                }
+                else if (item.Estado == 4)
+                {
+                    <p>Cerrada</p>
+
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaVenta) <!--//"{0:d MMM yyyy}", new{})-->
+            </td>
+
+            <td>
+                @Html.ActionLink("F", "ListUpload", new { id = item.ID }, new { @class = "btn_camera btn_md", title = "Agregar Foto" })
+                @if (item.Estado != 4 && item.Estado != 3)
+                {
+
+                    if (item.TipoVenta == 3)
+                    {
+                        @Html.ActionLink("E", "VentaEdit", "Mermas", new { id = item.ID }, new { @class = "btn_edit btn_md", @title = "Editar" })
+                        @Html.ActionLink("C", "VentaCambiarEstado", "Mermas", new { id = item.ID }, new { @class = "btn_refresh btn_md", @title = "Cambiar estado" })
+                        @Html.ActionLink("B", "VentaDelete", "Mermas", new { id = item.ID }, new { @class = "btn_delete btn_md", @title = "Borrar" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("E", "Edit", new { id = item.ID }, new { @class = "btn_edit btn_md", @title = "Editar" })
+                        @Html.ActionLink("C", "CambiarEstado", new { id = item.ID }, new { @class = "btn_refresh btn_md", @title = "Cambiar estado" })
+                        @Html.ActionLink("B", "Delete", new { id = item.ID }, new { @class = "btn_delete btn_md", @title = "Borrar" })
+                    }
+
+                }
+                else
+                {
+                    if ( item.TipoVenta != 3)
+                    {
+                        @Html.ActionLink("E", "Devolucion", new { id = item.ID }, new { @class = "btn_share btn_md", @title = "Devolver" })
+                    }
+
+
+                }
+
+
+            </td>
+        </tr>
+    }
+
+</table>
+Página @(Model.ListVentas.PageCount < Model.ListVentas.PageNumber ? 0 : Model.ListVentas.PageNumber) de @Model.ListVentas.PageCount
+@Html.PagedListPager(Model.ListVentas, page => Url.Action("Index",
+    new { page, SearchString = ViewBag.Search, Paso= ViewBag.Paso, categoriaId=ViewBag.categoriaId }))
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+
+            $("#Paso").on("blur",
+                function () {
+                    if ($("#Paso").val() === "" || parseInt($("#Paso").val()) === 0) {
+                        $("#Paso").val("1");
+                    }
+                    $("#buscarVenta").click();
+                });
+
+            $("#categoriaId").on("change",
+                function () {
+                    if ($("#categoriaId").val() === "2") {
+                        $("#SearchString").attr("disabled", true);
+                        $("#SearchString1").attr("disabled", false);
+                        $("#SearchString2").attr("disabled", true);
+
+                        $("#SearchString").attr("style", "display: none");
+                        $("#SearchString1").attr("style", "display: block");
+                        $("#SearchString2").attr("style", "display: none");
+
+                        $("#SearchString").prop("type", "text");
+
+                    } else {
+                        if ($("#categoriaId").val() === "3" || $("#categoriaId").val() === "4") {
+
+                            $("#SearchString1").attr("disabled", true);
+                            $("#SearchString2").attr("disabled", true);
+                            $("#SearchString").attr("disabled", false);
+                            $("#SearchString1").attr("style", "display:none");
+                            $("#SearchString2").attr("style", "display:none");
+                            $("#SearchString").attr("style", "display:block");
+                            $("#SearchString").prop("type", "number");
+
+                        } else if ($("#categoriaId").val() === "5") {
+
+                            $("#SearchString1").attr("disabled", true);
+                            $("#SearchString").attr("disabled", true);
+                            $("#SearchString2").attr("disabled", false);
+                            $("#SearchString1").attr("style", "display:none");
+                            $("#SearchString").attr("style", "display:none");
+                            $("#SearchString2").attr("style", "display:block");
+                            $("#SearchString2").prop("type", "text");
+
+                        } else {
+                            $("#SearchString1").attr("disabled", true);
+                            $("#SearchString2").attr("disabled", true);
+                            $("#SearchString").attr("disabled", false);
+                            $("#SearchString1").attr("style", "display:none");
+                            $("#SearchString2").attr("style", "display:none");
+                            $("#SearchString").attr("style", "display:block");
+                            $("#SearchString").prop("type", "text");
+                        }
+
+                    }
+
+                });
+
+            if ($("#categoriaId").val() !== "2") {
+                if ($("#categoriaId").val() !== "5") {
+                    $("#SearchString2").attr("disabled", true);
+                    $("#SearchString2").attr("style", "display:none");
+
+                } else {
+                    $("#SearchString").attr("disabled", true);
+                    $("#SearchString").attr("style", "display:none");
+                }
+                $("#SearchString1").attr("disabled", true);
+                $("#SearchString1").attr("style", "display:none");
+
+            } else {
+                $("#SearchString").attr("disabled", true);
+                $("#SearchString").attr("style", "display:none");
+                $("#SearchString2").attr("style", "display:none");
+
+            }
+            if ($("#validacion").val()==="1") {
+                toastr.error("Esta venta tiene una deuda asosiada y no se puede modificar. Por favor gestione la deuda antes de continuar");
+            }
+            
+
+        });
+
+        $("#tablaV tbody tr:not(.table-primary)").on("click",
+            function () {
+
+
+                var id = this.cells[0].textContent.trim();
+                if (parseInt(id)) {
+                    window.location.href = "Ventas/Details/" + id;
+                }
+
+                /*$.ajax({
+                    type: 'GET',
+                    url: 'Ventas/Details/'+id,
+                    data: "",
+                    contentType: 'application/json; charset=utf-8',
+
+                    success: function(response) {
+                        toastr.success("OK");
+
+                    },
+                    error: function(response) {
+                        bootbox.alert("Error inesperado: ");
+                    }
+                });*/
+            });
+    </script>
+
+
+}

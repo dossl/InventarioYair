@@ -1,0 +1,87 @@
+﻿@using PagedList.Mvc
+@model  InventarioOtro.ViewModels.IndexVendedorViewModel
+
+
+@{
+    ViewBag.Title = "Vendedores";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<h4>Vendedores</h4>
+
+<div class="row" style="float: right">
+    <p>
+        <a role="button">@Html.ActionLink("+", "Create", new { area = "" }, new { @class = "btn btn-primary btn-lg", @title = "Insertar un nuevo vendedor" })</a>
+    </p>
+</div>
+@using (Html.BeginForm("Index", "Vendedors"))
+{
+    <div class="row form-group">
+        <div class="col-md-1" style="margin-top: 8px; margin-left: 7px">Mostrar</div>
+        <div class="col-md-1" style="margin-left: -13px">@Html.TextBox("Paso", "50", new { @class = "form-control", @type = "number", @min = 1, @style = "width:120%" })</div>
+        <div class="col-md-1 ">@Html.Label("", new { @class = "hidden" })</div>
+        <div class="col-md-2">
+            <!-- //Html.DropDownListFor(m => m.BuscadorCategoriaProducto.Criterio, Model.Listcriterio, new { class = "form-control" })-->
+
+        </div>
+        <div class="col-md-2">@Html.TextBox("SearchString", "", new { @class = "form-control" })</div>
+        <div class="col-md-2">
+            <button id="buscarVende" type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Buscar según el criterio" data-original-title="Buscar">Buscar</button>
+        </div>
+    </div>
+}
+    <table class="table table-hover table-responsive-md" style="margin-left: 5px">
+        <tr class="table-primary">
+            <th>
+                Nombre del vendedor
+            </th>
+            <th></th>
+        </tr>
+
+        @if (!Model.ListVendedores.Any())
+        {
+            <tr><td colspan="3">No hay elementos que mostrar</td></tr>
+        }
+
+        @foreach (var item in Model.ListVendedores)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.ActionLink("E", "Edit", new { id = item.ID }, new { @class = "btn_edit btn_md", @title = "Editar" })
+                    @Html.ActionLink("D", "Details", new { id = item.ID }, new { @class = "btn_detail btn_md", @title = "Detalles" })
+                    @Html.ActionLink("B", "Delete", new { id = item.ID }, new { @class = "btn_delete btn_md", @title = "Borrar" })
+                </td>
+            </tr>
+        }
+
+    </table>
+Página @(Model.ListVendedores.PageCount < Model.ListVendedores.PageNumber ? 0 : Model.ListVendedores.PageNumber) de @Model.ListVendedores.PageCount
+
+@Html.PagedListPager(Model.ListVendedores, page => Url.Action("Index",
+    new { page, SearchString = ViewBag.Search, Paso= ViewBag.Paso, categoriaId=ViewBag.categoriaId }))
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+    <script>
+        $(document).ready(function() {
+
+            $("#Paso").on("blur",
+                function() {
+                    if ($("#Paso").val() === "" || parseInt($("#Paso").val()) === 0) {
+                        $("#Paso").val("1");
+                    }
+                    $("#buscarVende").click();
+                });
+        });
+    </script>
+
+
+}
+
